@@ -1,6 +1,6 @@
 import React from "react";
-import HomePage from "./screens/homePage";
+import AppNavigator from "./navigation";
 
 export const App = () => {
-	return <HomePage />;
+	return <AppNavigator />;
 };

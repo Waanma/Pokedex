@@ -22,3 +22,4 @@ This is a personal project that includes the lastest technologies and good pract
 
 •React Native Reanimated
 
+•Adobe Illustrator

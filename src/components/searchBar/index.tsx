@@ -22,6 +22,11 @@ const ImageContainer = styled.Image`
 `;
 const SearchContainer = styled.View`
 	flex-direction: row;
+	border: 1px solid rgba(0, 0, 0, 1);
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 25px;
+	border-bottom-right-radius: 25px;
 `;
 const Search = styled.TextInput`
 	width: 150px;
@@ -29,6 +34,7 @@ const Search = styled.TextInput`
 	background-color: #fff;
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;
+	border: 2px solid #cccccc;
 `;
 const SearchButton = styled.TouchableOpacity`
 	background-color: #fff;
@@ -37,6 +43,7 @@ const SearchButton = styled.TouchableOpacity`
 	border-top-right-radius: 25px;
 	border-bottom-right-radius: 25px;
 	color: black;
+	border: 1px solid #9c9c9c;
 `;
 
 const SearchBar = () => {

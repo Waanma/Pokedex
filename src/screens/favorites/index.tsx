@@ -1,17 +1,18 @@
 import React from "react";
+import { Text } from "react-native";
 import styled from "styled-components/native";
-import PokemonDetails from "../../components/pokemonDetails/index";
 
 const Container = styled.View`
+	background-color: #db3c36;
 	height: 100%;
 `;
 
-const DetailsScreen = () => {
+const Favorites = () => {
 	return (
 		<Container>
-			<PokemonDetails />
+			<Text>Favorites</Text>
 		</Container>
 	);
 };
 
-export default DetailsScreen;
+export default Favorites;
