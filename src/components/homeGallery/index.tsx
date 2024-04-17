@@ -88,6 +88,7 @@ interface GalleryProps {
 const Gallery = ({ navigation }: GalleryProps) => {
 	const navigateDetails = (pokemon: PokemonDetailsParams) => {
 		navigation.navigate("Details", {
+			id: pokemon.id,
 			pokemonName: pokemon.name,
 			pokemonType: pokemon.pokemon_v2_pokemontypes.pokemon_v2_type.name,
 			sprite: pokemon.sprites.front_default,
@@ -103,6 +104,7 @@ const Gallery = ({ navigation }: GalleryProps) => {
 	const handlePress = (pokemon: isPokemon) => {
 		navigateDetails({
 			id: pokemon.id,
+			pokemonId: pokemon.id,
 			name: pokemon.name,
 			height: pokemon.height,
 			weight: pokemon.weight,

@@ -1,9 +1,10 @@
 export type RootStackParamList = {
     Home: undefined;
-    Details: { pokemonName: string, sprite: string, exp: number, height: number, weight: number, pokemonType: string, abilityName: string, abilityEffect: string }
+    Details: { id: number, pokemonName: string, sprite: string, exp: number, height: number, weight: number, pokemonType: string, abilityName: string, abilityEffect: string }
 };
 export interface PokemonDetailsParams {
     id: number;
+    pokemonId: number;
     name: string;
     height: number;
     weight: number;

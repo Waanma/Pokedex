@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Image, ImageBackground, View } from "react-native";
+import { useFavorites } from "../favorites";
 
 const Container = styled.SafeAreaView`
 	height: 100%;
@@ -92,6 +93,7 @@ const DetailsText = styled.Text<{ type?: boolean; ability?: boolean }>`
 
 //interfaces
 interface DetailsRouteParams {
+	id: number;
 	pokemonName: string;
 	sprite: string;
 	exp: number;
@@ -100,21 +102,27 @@ interface DetailsRouteParams {
 	pokemonType: string;
 	abilityName: string;
 	abilityEffect: string;
+	pokemonId: number;
 }
 
 const Details = () => {
 	const navigation = useNavigation();
 	const route = useRoute();
-	const { pokemonName, sprite, exp, height, weight, pokemonType, abilityName, abilityEffect } =
+	const { id, pokemonName, sprite, exp, height, weight, pokemonType, abilityName, abilityEffect } =
 		route.params as DetailsRouteParams;
 	const goBack = () => {
 		navigation.goBack();
 	};
+	const { addToFavorites } = useFavorites();
+	const handleAddToFavorites = useCallback(() => {
+		const pokemon = {id: id, name: pokemonName};
+		addToFavorites(pokemon);
+	}, [addToFavorites, id, pokemonName]);
 	return (
 		<Container>
 			<BackContainer>
 				<Icon onPress={goBack} name="backburger" size={45} color="#db3c36" />
-				<Icon name="heart" size={45} color="#db3c36" />
+				<Icon onPress={handleAddToFavorites} name="heart" size={45} color="#db3c36" />
 			</BackContainer>
 			<CardContainer>
 				<HeaderContainer>
