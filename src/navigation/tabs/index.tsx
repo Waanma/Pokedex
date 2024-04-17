@@ -1,5 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeNavigator from "../homeNavigator";
 import Favorites from "../../screens/favorites";
 
@@ -13,8 +14,7 @@ const TabsNavigator = () => {
 				headerShown: false,
 				tabBarInactiveBackgroundColor: "#db3c36",
 				tabBarActiveBackgroundColor: "#35d4db",
-				tabBarActiveTintColor: "gray",
-				tabBarInactiveTintColor: "black",
+				tabBarActiveTintColor: "black",
 			}}
 		>
 			<BottomTab.Screen
@@ -26,6 +26,9 @@ const TabsNavigator = () => {
 						borderTopColor: "#35d4db",
 						backgroundColor: "#35d4db",
 					},
+					tabBarIcon: ({ color, size }) => {
+						return <Icon name="pokeball" size={size} color={color} />;
+					},
 				}}
 			/>
 			<BottomTab.Screen
@@ -33,9 +36,12 @@ const TabsNavigator = () => {
 				component={Favorites}
 				options={{
 					tabBarStyle: {
-						borderTopWidth: 3, // Grosor del borde superior
-						borderTopColor: "#35d4db", // Color del borde superior
-						backgroundColor: "#35d4db", // Color de fondo del tab bar
+						borderTopWidth: 3,
+						borderTopColor: "#35d4db",
+						backgroundColor: "#35d4db",
+					},
+					tabBarIcon: ({ color, size }) => {
+						return <Icon name="folder-heart" size={size} color={color} />;
 					},
 				}}
 			/>

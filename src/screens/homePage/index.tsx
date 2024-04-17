@@ -17,7 +17,6 @@ const TitleContainer = styled.View`
 const GalleryContainer = styled.View`
 	margin-horizontal: 5%;
 	height: 100%;
-	border: 15px solid rgba(0, 0, 0, 1);
 	border-radius: 35px;
 `;
 
