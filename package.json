@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native-stack": "^6.9.26",
     "@react-navigation/stack": "^6.3.29",
@@ -24,7 +25,9 @@
     "react-native-safe-area-context": "^4.9.0",
     "react-native-screens": "^3.29.0",
     "react-native-vector-icons": "^10.0.3",
-    "styled-components": "^6.1.1"
+    "styled-components": "^6.1.1",
+    "zustand": "^4.5.2",
+    "zustand-persist": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

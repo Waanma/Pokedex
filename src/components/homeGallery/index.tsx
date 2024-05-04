@@ -65,12 +65,15 @@ const QUERY = gql`
 `;
 
 // interfaces
-interface isPokemon {
+export interface isPokemon {
 	id: number;
 	name: string;
 	base_experience: number;
 	height: number;
 	weight: number;
+	sprites: {
+		front_default: string;
+	};
 	pokemon_v2_pokemonsprites: { sprites: { other: { home: { front_default: string } } } }[];
 	pokemon_v2_pokemontypes: { pokemon_v2_type: { name: string } }[];
 	pokemon_v2_pokemonabilities: {

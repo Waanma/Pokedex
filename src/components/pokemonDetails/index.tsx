@@ -3,21 +3,22 @@ import styled from "styled-components/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Image, ImageBackground, View } from "react-native";
-import { useFavorites } from "../favorites";
+import { useStore } from "../../store/store";
 
 const Container = styled.SafeAreaView`
 	height: 100%;
 	width: 100%;
+	padding-top: 20px;
 	justify-content: center;
 	align-items: center;
 	background-color: #35d4db;
 `;
 const BackContainer = styled.View`
 	width: 85%;
-	height: 10%;
 	flex-direction: row;
 	justify-content: space-between;
 `;
+const Pokeball = styled.TouchableOpacity``;
 const CardContainer = styled.View`
 	width: 90%;
 	height: 85%;
@@ -108,21 +109,78 @@ interface DetailsRouteParams {
 const Details = () => {
 	const navigation = useNavigation();
 	const route = useRoute();
-	const { id, pokemonName, sprite, exp, height, weight, pokemonType, abilityName, abilityEffect } =
-		route.params as DetailsRouteParams;
+	const {
+		id,
+		pokemonName,
+		sprite,
+		exp,
+		height,
+		weight,
+		pokemonType,
+		abilityName,
+		abilityEffect,
+	} = route.params as DetailsRouteParams;
 	const goBack = () => {
 		navigation.goBack();
 	};
-	const { addToFavorites } = useFavorites();
-	const handleAddToFavorites = useCallback(() => {
-		const pokemon = {id: id, name: pokemonName};
-		addToFavorites(pokemon);
-	}, [addToFavorites, id, pokemonName]);
+	const { addToFavorites, removeFromFavorites, favorites } = useStore();
+	const isFavorite = favorites.some((pokemon) => pokemon.id === id);
+
+	const handleToggleFavorite = useCallback(() => {
+		if (isFavorite) {
+			removeFromFavorites(id);
+		} else {
+			addToFavorites({
+				id,
+				sprite,
+				name: pokemonName,
+				pokemonId: 0,
+				height: 0,
+				weight: 0,
+				sprites: {
+					front_default: sprite,
+				},
+				base_experience: 0,
+				pokemon_v2_pokemontypes: {
+					pokemon_v2_type: {
+						name: "",
+					},
+				},
+				pokemonType: "",
+				abilityName: {
+					pokemon_v2_pokemonabilities: {
+						pokemon_v2_ability: {
+							name: "",
+						},
+					},
+				},
+				abilityEffect: {
+					pokemon_v2_pokemonabilities: {
+						pokemon_v2_ability: {
+							pokemon_v2_abilityeffecttexts: {
+								effect: "",
+							},
+						},
+					},
+				},
+			});
+		}
+	}, [addToFavorites, removeFromFavorites, id, pokemonName, isFavorite]);
 	return (
 		<Container>
 			<BackContainer>
 				<Icon onPress={goBack} name="backburger" size={45} color="#db3c36" />
-				<Icon onPress={handleAddToFavorites} name="heart" size={45} color="#db3c36" />
+				<Pokeball onPress={handleToggleFavorite}>
+					<Image
+						source={
+							isFavorite
+								? require("../../../assets/img/closePokeball.png")
+								: require("../../../assets/img/openPokeball.png")
+						}
+						style={{ width: 50, height: 50, top: -10 }}
+						resizeMode="contain"
+					/>
+				</Pokeball>
 			</BackContainer>
 			<CardContainer>
 				<HeaderContainer>

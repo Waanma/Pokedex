@@ -1,29 +1,21 @@
 import React from "react";
 import styled from "styled-components/native";
-import { useFavorites } from "../../components/favorites";
+import Favorites from "../../components/favorites";
+import { useStore } from "../../store/store";
 
-const Container = styled.View`
+const ScreenContainer = styled.View`
 	background-color: #db3c36;
-	height: 100%;
-	align-items: center;
-	justify-content: center;
-`;
-const ListItem = styled.Text`
-	color: white;
-	font-size: 18px;
-	margin-bottom: 10px;
+	flex: 1;
 `;
 
-const Favorites = () => {
-	const { favorites } = useFavorites();
+const FavoritesScreen: React.FC = () => {
+	const { favorites } = useStore();
 
 	return (
-		<Container>
-			{favorites.map((pokemon) => (
-				<ListItem key={pokemon.id}>{pokemon.name}</ListItem>
-			))}
-		</Container>
+		<ScreenContainer>
+			<Favorites favorites={favorites} onPressPokeball={() => {}} />
+		</ScreenContainer>
 	);
 };
 
-export default Favorites;
+export default FavoritesScreen;
