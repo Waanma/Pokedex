@@ -3,9 +3,7 @@ import styled from "styled-components/native";
 import Favorites from "../../components/favorites";
 import { useStore } from "../../store/store";
 
-const ScreenContainer = styled.View`
-	background-color: #db3c36;
-	flex: 1;
+const ScreenContainer = styled.SafeAreaView`
 `;
 
 const FavoritesScreen: React.FC = () => {

@@ -1,8 +1,22 @@
 export type RootStackParamList = {
     Home: undefined;
-    Details: { id: number, pokemonName: string, sprite: string, exp: number, height: number, weight: number, pokemonType: string, abilityName: string, abilityEffect: string }
+    Details: {
+        id: number,
+        pokemonName: string,
+        sprite: string, exp: number,
+        height: number, weight: number,
+        pokemonType: string, abilityName: string,
+        abilityEffect: string,
+        stats: {
+            base_stat: number;
+            pokemon_v2_stat: {
+                name: string;
+            };
+        }[];
+    };
+    Favorites: { id: number, pokemonName: string, sprite: string };
 };
-export interface PokemonDetailsParams {
+export type PokemonDetailsParams = {
     id: number;
     pokemonId: number;
     name: string;
@@ -22,4 +36,10 @@ export interface PokemonDetailsParams {
     abilityEffect: {
         pokemon_v2_pokemonabilities: { pokemon_v2_ability: { pokemon_v2_abilityeffecttexts: { effect: string } } }
     };
+    stats: {
+        base_stat: number;
+        pokemon_v2_stat: {
+            name: string;
+        };
+    }[];
 }

@@ -1,28 +1,30 @@
-import { gql, useQuery } from "@apollo/client";
-import React from "react";
+import { useQuery } from "@apollo/client";
+import React, { useCallback } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import { RootStackParamList, PokemonDetailsParams } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { QUERY } from "../../API/graphQL";
+import { ProgressBar } from "@react-native-community/progress-bar-android";
 
-const ContainerScroll = styled.ScrollView``;
+const ContainerScroll = styled.ScrollView`
+`;
 const Container = styled.View`
 	flex-direction: row;
 	flex-wrap: wrap;
 	gap: 15px;
 	justify-content: center;
-	padding-vertical: 25px;
-	border-radius: 15px;
+	padding-bottom: 25px;
 `;
 const Item = styled.TouchableOpacity<{ sprites?: string }>`
-	flex-direction: row;
+	display: grid;
 	align-items: center;
 	justify-content: space-around;
-	background-color: black;
-	border: 1px solid white;
-	border-radius: 5px;
-	height: 90px;
-	width: 90%;
+	background-color: #db3c36;
+	border: 1px solid gray;
+	border-radius: 10px;
+	height: 130px;
+	width: 40%;
 `;
 const Text1 = styled.Text`
 	color: white;
@@ -32,40 +34,18 @@ const Text1 = styled.Text`
 const Loading = styled.View`
 	height: 100%;
 	width: 100%;
-	background-color: #db3c36;
+	align-items: center;
+	justify-content: center;
+`;
+const RefreshButton = styled.TouchableOpacity`
+	background-color: red;
+	padding: 5px;
+	border-radius: 5px;
+	border: 0.5px solid #db3c36;
 `;
 
-// graphQL
-const QUERY = gql`
-	query getPokemons {
-		pokemon_v2_pokemon(limit: 50) {
-			id
-			name
-			base_experience
-			height
-			weight
-			pokemon_v2_pokemonsprites {
-				sprites
-			}
-			pokemon_v2_pokemontypes {
-				pokemon_v2_type {
-					name
-				}
-			}
-			pokemon_v2_pokemonabilities {
-				pokemon_v2_ability {
-					name
-					pokemon_v2_abilityeffecttexts {
-						effect
-					}
-				}
-			}
-		}
-	}
-`;
-
-// interfaces
-export interface isPokemon {
+// types
+export type isPokemon = {
 	id: number;
 	name: string;
 	base_experience: number;
@@ -77,12 +57,26 @@ export interface isPokemon {
 	pokemon_v2_pokemonsprites: { sprites: { other: { home: { front_default: string } } } }[];
 	pokemon_v2_pokemontypes: { pokemon_v2_type: { name: string } }[];
 	pokemon_v2_pokemonabilities: {
+		pokemon_v2_pokemon: {
+			pokemon_v2_pokemonstats: {
+				base_stat: number;
+				pokemon_v2_stat: {
+					name: string;
+				};
+			}[];
+		};
 		pokemon_v2_ability: {
 			name: string;
 			pokemon_v2_abilityeffecttexts: { effect: string }[];
 		};
 	}[];
-}
+	stats: {
+		base_stat: number;
+		pokemon_v2_stat: {
+			name: string;
+		};
+	}[];
+};
 interface GalleryProps {
 	navigation: StackNavigationProp<RootStackParamList, "Details">;
 }
@@ -101,9 +95,16 @@ const Gallery = ({ navigation }: GalleryProps) => {
 			abilityName: pokemon.abilityName.pokemon_v2_pokemonabilities.pokemon_v2_ability.name,
 			abilityEffect:
 				pokemon.abilityEffect.pokemon_v2_pokemonabilities.pokemon_v2_ability
-					.pokemon_v2_abilityeffecttexts.effect,
+					.pokemon_v2_abilityeffecttexts.effect || "",
+			stats: pokemon.stats.map((stat) => ({
+				base_stat: stat.base_stat,
+				pokemon_v2_stat: {
+					name: stat.pokemon_v2_stat.name,
+				},
+			})),
 		});
 	};
+
 	const handlePress = (pokemon: isPokemon) => {
 		navigateDetails({
 			id: pokemon.id,
@@ -139,15 +140,32 @@ const Gallery = ({ navigation }: GalleryProps) => {
 					},
 				},
 			},
+			stats: pokemon.pokemon_v2_pokemonabilities[0]?.pokemon_v2_pokemon.pokemon_v2_pokemonstats.map(
+				(stat) => ({
+					base_stat: stat.base_stat,
+					pokemon_v2_stat: {
+						name: stat.pokemon_v2_stat.name,
+					},
+				})
+			),
 		});
 	};
 
 	// Query
-	const { data } = useQuery(QUERY);
+	const { data, refetch } = useQuery(QUERY);
+	const refetchData = useCallback(() => {
+		refetch();
+	}, [refetch]);
+
 	if (!data || !data.pokemon_v2_pokemon) {
 		return (
 			<Loading>
-				<Text1>Loading...</Text1>
+				<View style={{ width: 70, height: 70 }}>
+					<ProgressBar color="#db3c36" styleAttr="Large" />
+				</View>
+				<RefreshButton onPress={refetchData}>
+					<Text1>Refresh</Text1>
+				</RefreshButton>
 			</Loading>
 		);
 	}
@@ -166,7 +184,6 @@ const Gallery = ({ navigation }: GalleryProps) => {
 						/>
 						<View style={{ gap: 10 }}>
 							<Text1>{pokemon.name}</Text1>
-							<Text1>exp: {pokemon.base_experience}</Text1>
 						</View>
 					</Item>
 				))}

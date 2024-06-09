@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import PokemonDetails from "../../components/pokemonDetails";
+import PokemonDetails from "../../components/details";
 
 const Stack = createNativeStackNavigator();
 

@@ -22,8 +22,6 @@ const TabsNavigator = () => {
 				component={HomeNavigator}
 				options={{
 					tabBarStyle: {
-						borderTopWidth: 3,
-						borderTopColor: "#35d4db",
 						backgroundColor: "#35d4db",
 					},
 					tabBarIcon: ({ color, size }) => {
@@ -36,8 +34,6 @@ const TabsNavigator = () => {
 				component={Favorites}
 				options={{
 					tabBarStyle: {
-						borderTopWidth: 3,
-						borderTopColor: "#35d4db",
 						backgroundColor: "#35d4db",
 					},
 					tabBarIcon: ({ color, size }) => {

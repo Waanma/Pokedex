@@ -8,13 +8,14 @@ interface Store {
     favorites: PokemonDetailsParams[];
     addToFavorites: (pokemon: PokemonDetailsParams & { name: string, sprite: string }) => void;
     removeFromFavorites: (pokemonId: number) => void;
+    clearFavorites: () => void;
 }
 const initialState: Store = {
     favorites: [],
     addToFavorites: () => { },
     removeFromFavorites: () => { },
+    clearFavorites: () => { },
 };
-
 
 export const useStore = create<Store>(
     // @ts-expect-error -> "this works correctly"
@@ -28,7 +29,16 @@ export const useStore = create<Store>(
             removeFromFavorites: (pokemonId) =>
                 set((state) => ({
                     favorites: state.favorites.filter((pokemon) => pokemon.id !== pokemonId),
-                }))
+                })),
+            clearFavorites: async () => {
+                try {
+                    await AsyncStorage.removeItem("pokemonStore");
+                    console.log("Pokemons are free");
+                    set({ favorites: [] });
+                } catch (error) {
+                    console.error("Error: ", error);
+                }
+            }
         }),
         {
             name: "pokemonStore",

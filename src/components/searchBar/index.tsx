@@ -6,6 +6,7 @@ import {
 	PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import { Animated } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Container = styled.View`
 	padding: 10px;
@@ -14,8 +15,7 @@ const Container = styled.View`
 	align-items: center;
 `;
 
-const SvgTouchContainer = styled.TouchableOpacity`
-`;
+const SvgTouchContainer = styled.TouchableOpacity``;
 const ImageContainer = styled.Image`
 	width: 100px;
 	height: 100px;
@@ -40,6 +40,8 @@ const SearchButton = styled.TouchableOpacity`
 	background-color: #fff;
 	height: 50px;
 	width: 50px;
+	align-items: center;
+	justify-content: center;
 	border-top-right-radius: 25px;
 	border-bottom-right-radius: 25px;
 	color: black;
@@ -91,7 +93,9 @@ const SearchBar = () => {
 							onFocus={() => setSearchVisible(true)}
 							onBlur={() => setSearchVisible(false)}
 						/>
-						<SearchButton />
+						<SearchButton>
+							<Icon name="magnify" size={40} color={"black"} />
+						</SearchButton>
 					</SearchContainer>
 				)}
 			</Animated.View>
