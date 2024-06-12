@@ -1,14 +1,16 @@
 import { useQuery } from "@apollo/client";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Image, View } from "react-native";
 import styled from "styled-components/native";
 import { RootStackParamList, PokemonDetailsParams } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { QUERY } from "../../API/graphQL";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import SearchBar from "../searchBar";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const ContainerScroll = styled.ScrollView`
-`;
+const ContainerScroll = styled.ScrollView``;
 const Container = styled.View`
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -25,6 +27,7 @@ const Item = styled.TouchableOpacity<{ sprites?: string }>`
 	border-radius: 10px;
 	height: 130px;
 	width: 40%;
+	elevation: 4;
 `;
 const Text1 = styled.Text`
 	color: white;
@@ -42,6 +45,18 @@ const RefreshButton = styled.TouchableOpacity`
 	padding: 5px;
 	border-radius: 5px;
 	border: 0.5px solid #db3c36;
+`;
+const ClearButton = styled.TouchableOpacity`
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	background-color: #fff;
+	height: 50px;
+	width: 50px;
+	align-items: center;
+	justify-content: center;
+	border-radius: 25px;
+	elevation: 5;
 `;
 
 // types
@@ -83,6 +98,8 @@ interface GalleryProps {
 
 //COMPONENT GALLERY
 const Gallery = ({ navigation }: GalleryProps) => {
+	const [searchTerm, setSearchTerm] = useState("");
+
 	const navigateDetails = (pokemon: PokemonDetailsParams) => {
 		navigation.navigate("Details", {
 			id: pokemon.id,
@@ -151,6 +168,10 @@ const Gallery = ({ navigation }: GalleryProps) => {
 		});
 	};
 
+	const handleClear = () => {
+		setSearchTerm("");
+	};
+
 	// Query
 	const { data, refetch } = useQuery(QUERY);
 	const refetchData = useCallback(() => {
@@ -170,25 +191,41 @@ const Gallery = ({ navigation }: GalleryProps) => {
 		);
 	}
 
+	const filteredPokemon = searchTerm
+		? data.pokemon_v2_pokemon.filter((pokemon: isPokemon) =>
+			pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+		  )
+		: data.pokemon_v2_pokemon;
+
 	return (
-		<ContainerScroll showsVerticalScrollIndicator={false}>
-			<Container>
-				{data.pokemon_v2_pokemon.map((pokemon: isPokemon) => (
-					<Item key={pokemon.id} onPress={() => handlePress(pokemon)}>
-						<Image
-							source={{
-								uri: pokemon.pokemon_v2_pokemonsprites[0].sprites.other.home
-									.front_default,
-							}}
-							style={{ width: 100, height: 100, top: -5 }}
-						/>
-						<View style={{ gap: 10 }}>
-							<Text1>{pokemon.name}</Text1>
-						</View>
-					</Item>
-				))}
-			</Container>
-		</ContainerScroll>
+		<>
+			<GestureHandlerRootView>
+				<SearchBar onSearch={setSearchTerm} />
+			</GestureHandlerRootView>
+			<ContainerScroll showsVerticalScrollIndicator={false}>
+				<Container>
+					{filteredPokemon.map((pokemon: isPokemon) => (
+						<Item key={pokemon.id} onPress={() => handlePress(pokemon)}>
+							<Image
+								source={{
+									uri: pokemon.pokemon_v2_pokemonsprites[0].sprites.other.home
+										.front_default,
+								}}
+								style={{ width: 100, height: 100, top: -5 }}
+							/>
+							<View style={{ gap: 10 }}>
+								<Text1>{pokemon.name}</Text1>
+							</View>
+						</Item>
+					))}
+				</Container>
+			</ContainerScroll>
+			{searchTerm.length > 0 && (
+				<ClearButton onPress={handleClear}>
+					<Icon name="close" size={40} color={"black"} />
+				</ClearButton>
+			)}
+		</>
 	);
 };
 

@@ -35,6 +35,7 @@ const Card = styled.TouchableOpacity`
 	align-items: center;
 	flex-direction: row;
 	justify-content: space-around;
+	elevation: 5;
 `;
 const Text1 = styled.Text`
 	color: black;

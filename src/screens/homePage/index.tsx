@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components/native";
 import SearchBar from "../../components/searchBar";
 import { StatusBar, ImageBackground } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Gallery from "../../components/homePage";
 import { useNavigation } from "@react-navigation/native";
 
@@ -17,7 +16,6 @@ const TitleContainer = styled.View`
 const GalleryContainer = styled.View`
 	padding-top: 30%;
 	margin-horizontal: 2%;
-	height: 100%;
 	border-radius: 35px;
 `;
 
@@ -34,9 +32,6 @@ const HomePage = () => {
 				}}
 			/>
 			<StatusBar hidden />
-			<GestureHandlerRootView>
-				<SearchBar />
-			</GestureHandlerRootView>
 			<TitleContainer />
 			<GalleryContainer>
 				<Gallery navigation={navigation} />

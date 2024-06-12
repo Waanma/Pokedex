@@ -27,6 +27,7 @@ const SearchContainer = styled.View`
 	border-bottom-left-radius: 10px;
 	border-top-right-radius: 25px;
 	border-bottom-right-radius: 25px;
+	elevation: 5;
 `;
 const Search = styled.TextInput`
 	width: 150px;
@@ -48,8 +49,13 @@ const SearchButton = styled.TouchableOpacity`
 	border: 1px solid #9c9c9c;
 `;
 
-const SearchBar = () => {
+interface SearchBarProps {
+	onSearch: (term: string) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 	const [searchVisible, setSearchVisible] = useState(false);
+	const [searchText, setSearchText] = useState("");
 	const translateX = useRef(new Animated.Value(0)).current;
 	const initialX = useRef(0);
 
@@ -77,6 +83,10 @@ const SearchBar = () => {
 			}
 		}
 	};
+
+	const handleSearch = () => {
+		onSearch(searchText);
+	};
 	return (
 		<Container>
 			<Animated.View
@@ -89,11 +99,12 @@ const SearchBar = () => {
 				{searchVisible && (
 					<SearchContainer>
 						<Search
+							onChangeText={setSearchText}
 							placeholder="Search"
 							onFocus={() => setSearchVisible(true)}
 							onBlur={() => setSearchVisible(false)}
 						/>
-						<SearchButton>
+						<SearchButton onPress={handleSearch}>
 							<Icon name="magnify" size={40} color={"black"} />
 						</SearchButton>
 					</SearchContainer>
