@@ -4,9 +4,8 @@ import styled from "styled-components/native";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Image, ImageBackground, View } from "react-native";
+import { Image, ImageBackground, View, Text } from "react-native";
 import { useStore } from "../../store/store";
-import { Text } from "react-native";
 
 const ScrollContainer = styled.ScrollView``;
 const Container = styled.View`
@@ -30,12 +29,14 @@ const CardContainer = styled.View`
 	background-color: #fff7eb;
 	border-radius: 10px;
 `;
-const PokemonContainer = styled.View`
+const PokemonContainer = styled.TouchableOpacity`
 	width: 220px;
 	height: 220px;
 	border-radius: 150px;
 	border: 5px solid #fff7eb;
 	overflow: hidden;
+	position: relative;
+	top: -80;
 `;
 const HeaderContainer = styled.View`
 	width: 100%;
@@ -149,13 +150,12 @@ type DetailsRouteParams = {
 	id: number;
 	pokemonName: string;
 	sprite: string;
-	exp: number;
+	base_experience: number;
 	weight: number;
 	height: number;
 	pokemonType: string;
 	abilityName: string;
 	abilityEffect: string;
-	pokemonId: number;
 	stats: {
 		base_stat: number;
 		pokemon_v2_stat: {
@@ -171,7 +171,7 @@ const Details = () => {
 		id,
 		pokemonName,
 		sprite,
-		exp,
+		base_experience,
 		height,
 		weight,
 		pokemonType,
@@ -192,24 +192,23 @@ const Details = () => {
 			addToFavorites({
 				id,
 				sprite,
+				base_experience: base_experience,
 				name: pokemonName,
-				pokemonId: 0,
-				height: 0,
-				weight: 0,
+				height: height,
+				weight: weight,
 				sprites: {
 					front_default: sprite,
 				},
-				base_experience: 0,
 				pokemon_v2_pokemontypes: {
 					pokemon_v2_type: {
-						name: "",
+						name: pokemonType,
 					},
 				},
-				pokemonType: "",
+				pokemonType,
 				abilityName: {
 					pokemon_v2_pokemonabilities: {
 						pokemon_v2_ability: {
-							name: "",
+							name: abilityName,
 						},
 					},
 				},
@@ -217,7 +216,7 @@ const Details = () => {
 					pokemon_v2_pokemonabilities: {
 						pokemon_v2_ability: {
 							pokemon_v2_abilityeffecttexts: {
-								effect: "",
+								effect: abilityEffect,
 							},
 						},
 					},
@@ -231,6 +230,22 @@ const Details = () => {
 			});
 		}
 	}, [addToFavorites, removeFromFavorites, id, pokemonName, isFavorite]);
+
+	const getImageSource = (type: string) => {
+		switch (type) {
+			case "water":
+				return require("../../../assets/img/water.jpg");
+			case "poison":
+			case "ground":
+				return require("../../../assets/img/rock.jpg");
+			case "psychic":
+				return require("../../../assets/img/desert.jpg");
+			case "ghost":
+				return require("../../../assets/img/ghost.jpg");
+			default:
+				return require("../../../assets/img/normal.jpg");
+		}
+	};
 	return (
 		<ScrollContainer nestedScrollEnabled={true}>
 			<Container>
@@ -250,9 +265,9 @@ const Details = () => {
 				</BackContainer>
 				<CardContainer>
 					<HeaderContainer>
-						<PokemonContainer style={{ top: -80 }}>
+						<PokemonContainer>
 							<ImageBackground
-								source={require("../../../assets/img/pokemons2.jpg")}
+								source={getImageSource(pokemonType)}
 								style={{ borderRadius: 150, flex: 1 }}
 							>
 								<Image
@@ -261,9 +276,8 @@ const Details = () => {
 								/>
 							</ImageBackground>
 						</PokemonContainer>
-
 						<Name style={{ top: -80 }}>{pokemonName}</Name>
-						<Experience style={{ top: -80 }}>XP {exp}</Experience>
+						<Experience style={{ top: -80 }}>XP {base_experience}</Experience>
 					</HeaderContainer>
 					<TypeContainer>
 						<TypeContent type={pokemonType}>
@@ -296,7 +310,10 @@ const Details = () => {
 								<View key={index} style={{ flexDirection: "row", gap: 10 }}>
 									<View style={{ width: "40%" }}>
 										<Text
-											style={{ color: "#301030", fontFamily: "Nunito-Bold" }}
+											style={{
+												color: "#301030",
+												fontFamily: "Nunito-Bold",
+											}}
 										>
 											{stat.pokemon_v2_stat.name}
 										</Text>
@@ -312,7 +329,10 @@ const Details = () => {
 									</View>
 									<View>
 										<Text
-											style={{ color: "#301030", fontFamily: "Nunito-Bold" }}
+											style={{
+												color: "#301030",
+												fontFamily: "Nunito-Bold",
+											}}
 										>
 											{stat.base_stat}
 										</Text>

@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components/native";
-import SearchBar from "../../components/searchBar";
 import { StatusBar, ImageBackground } from "react-native";
 import Gallery from "../../components/homePage";
 import { useNavigation } from "@react-navigation/native";

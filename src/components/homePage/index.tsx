@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { useCallback, useState } from "react";
-import { Image, View } from "react-native";
+import { FlatList, Image, View } from "react-native";
 import styled from "styled-components/native";
 import { RootStackParamList, PokemonDetailsParams } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -10,13 +10,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SearchBar from "../searchBar";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const ContainerScroll = styled.ScrollView``;
 const Container = styled.View`
-	flex-direction: row;
-	flex-wrap: wrap;
-	gap: 15px;
 	justify-content: center;
 	padding-bottom: 25px;
+	height: 100%;
 `;
 const Item = styled.TouchableOpacity<{ sprites?: string }>`
 	display: grid;
@@ -25,8 +22,8 @@ const Item = styled.TouchableOpacity<{ sprites?: string }>`
 	background-color: #db3c36;
 	border: 1px solid gray;
 	border-radius: 10px;
-	height: 130px;
-	width: 40%;
+	width: 48%;
+	margin: 1%;
 	elevation: 4;
 `;
 const Text1 = styled.Text`
@@ -106,7 +103,7 @@ const Gallery = ({ navigation }: GalleryProps) => {
 			pokemonName: pokemon.name,
 			pokemonType: pokemon.pokemon_v2_pokemontypes.pokemon_v2_type.name,
 			sprite: pokemon.sprites.front_default,
-			exp: pokemon.base_experience,
+			base_experience: pokemon.base_experience,
 			height: pokemon.height,
 			weight: pokemon.weight,
 			abilityName: pokemon.abilityName.pokemon_v2_pokemonabilities.pokemon_v2_ability.name,
@@ -125,15 +122,14 @@ const Gallery = ({ navigation }: GalleryProps) => {
 	const handlePress = (pokemon: isPokemon) => {
 		navigateDetails({
 			id: pokemon.id,
-			pokemonId: pokemon.id,
 			name: pokemon.name,
+			base_experience: pokemon.base_experience,
 			height: pokemon.height,
 			weight: pokemon.weight,
 			sprites: {
 				front_default:
 					pokemon.pokemon_v2_pokemonsprites[0].sprites.other.home.front_default,
 			},
-			base_experience: pokemon.base_experience,
 			pokemon_v2_pokemontypes: {
 				pokemon_v2_type: {
 					name: pokemon.pokemon_v2_pokemontypes[0]?.pokemon_v2_type?.name,
@@ -202,24 +198,29 @@ const Gallery = ({ navigation }: GalleryProps) => {
 			<GestureHandlerRootView>
 				<SearchBar onSearch={setSearchTerm} />
 			</GestureHandlerRootView>
-			<ContainerScroll showsVerticalScrollIndicator={false}>
-				<Container>
-					{filteredPokemon.map((pokemon: isPokemon) => (
-						<Item key={pokemon.id} onPress={() => handlePress(pokemon)}>
+			<Container>
+				<FlatList
+					data={filteredPokemon}
+					keyExtractor={(pokemon: isPokemon) => pokemon.id.toString()}
+					initialNumToRender={25}
+					renderItem={({ item }: { item: isPokemon }) => (
+						<Item onPress={() => handlePress(item)}>
 							<Image
 								source={{
-									uri: pokemon.pokemon_v2_pokemonsprites[0].sprites.other.home
+									uri: item.pokemon_v2_pokemonsprites[0].sprites.other.home
 										.front_default,
 								}}
 								style={{ width: 100, height: 100, top: -5 }}
 							/>
 							<View style={{ gap: 10 }}>
-								<Text1>{pokemon.name}</Text1>
+								<Text1>{item.name}</Text1>
 							</View>
 						</Item>
-					))}
-				</Container>
-			</ContainerScroll>
+					)}
+					numColumns={2}
+					contentContainerStyle={{ paddingBottom: 25, gap: 15 }}
+				/>
+			</Container>
 			{searchTerm.length > 0 && (
 				<ClearButton onPress={handleClear}>
 					<Icon name="close" size={40} color={"black"} />

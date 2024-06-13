@@ -16,10 +16,14 @@ This is a personal project that includes the lastest technologies and good pract
 
 •Styled Components
 
-•GraphQL
+•GraphQL - Apollo Client
+
+•Zustand
 
 •VsCode
 
 •React Native Reanimated
+
+•React Native Vector Icons
 
 •Adobe Illustrator
