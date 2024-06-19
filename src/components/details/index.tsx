@@ -12,6 +12,7 @@ const Container = styled.View`
 	height: 100%;
 	width: 100%;
 	padding-top: 20px;
+	padding-bottom: 10%;
 	justify-content: center;
 	align-items: center;
 	background-color: #35d4db;
@@ -26,29 +27,32 @@ const CardContainer = styled.View`
 	width: 90%;
 	height: 85%;
 	align-items: center;
-	background-color: #fff7eb;
+	background-color: #db4540;
 	border-radius: 10px;
+	elevation: 1;
 `;
-const PokemonContainer = styled.TouchableOpacity`
+const PokemonContainer = styled.View`
 	width: 220px;
 	height: 220px;
 	border-radius: 150px;
-	border: 5px solid #fff7eb;
+	border: 5px solid #db4540;
 	overflow: hidden;
 	position: relative;
-	top: -80;
 `;
 const HeaderContainer = styled.View`
 	width: 100%;
 	align-items: center;
 `;
 const Name = styled.Text`
-	color: #301030;
+	color: #edf2fa;
 	font-family: "Nunito-Bold";
 	font-size: 33px;
+	text-shadow-color: rgba(0, 0, 0, 0.45);
+	text-shadow-offset: 2px 2px;
+	text-shadow-radius: 3px;
 `;
 const Experience = styled.Text`
-	color: gray;
+	color: #edf2fa;
 	font-size: 20px;
 `;
 const TypeContainer = styled.View`
@@ -61,8 +65,8 @@ const TypeContent = styled.View<{ type: string }>`
 	height: 40px;
 	justify-content: center;
 	align-items: center;
-	border-radius: 5px;
-	border: 0.2px solid black;
+	border-radius: 7px;
+	elevation: 5;
 	background-color: ${(props) => {
 		switch (props.type.toLowerCase()) {
 			case "fire":
@@ -117,6 +121,7 @@ const Stats = styled.View`
 	padding-horizontal: 20px;
 	padding-vertical: 3px;
 	border-radius: 10px;
+	elevation: 5;
 `;
 const DetailsContainer = styled.View`
 	width: 80%;
@@ -130,6 +135,7 @@ const AbilityContainer = styled.ScrollView`
 	padding-horizontal: 10px;
 	padding-top: 10px;
 	background-color: #808080;
+	elevation: 5;
 `;
 const DetailsText = styled.Text<{
 	type?: boolean;
@@ -139,10 +145,17 @@ const DetailsText = styled.Text<{
 }>`
 	font-family: "Nunito-Bold";
 	font-size: 15px;
-	${(props) => props.type && "color: #ffff; font-size: 18px;"}
+	${(props) => props.type && "color: #ffff; font-size: 20px; font-weight: bold; text-shadow-color: rgba(0, 0, 0, 1); text-shadow-offset: 0.5px 0.5px; text-shadow-radius: 4px;"}
 	${(props) => props.ability && "color: #000000; font-size: 18px;"}
 	${(props) => props.abilityName && "color: #35d4db; font-size: 22px; font-weight: bold"}
 	${(props) => props.whiteText && "color: #ebebeb; font-size: 16px; padding-bottom: 15px;"}
+`;
+const StatsContainer = styled.View`
+	gap: 10px;
+	elevation: 5;
+	background-color: #EDF2FA;
+	padding: 12px;
+	border-radius: 10px;
 `;
 
 //types
@@ -237,6 +250,7 @@ const Details = () => {
 				return require("../../../assets/img/water.jpg");
 			case "poison":
 			case "ground":
+			case "rock":
 				return require("../../../assets/img/rock.jpg");
 			case "psychic":
 				return require("../../../assets/img/desert.jpg");
@@ -247,7 +261,7 @@ const Details = () => {
 		}
 	};
 	return (
-		<ScrollContainer nestedScrollEnabled={true}>
+		<ScrollContainer nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
 			<Container>
 				<BackContainer>
 					<Icon onPress={goBack} name="backburger" size={45} color="#db3c36" />
@@ -265,7 +279,7 @@ const Details = () => {
 				</BackContainer>
 				<CardContainer>
 					<HeaderContainer>
-						<PokemonContainer>
+						<PokemonContainer style={{ top: -80 }}>
 							<ImageBackground
 								source={getImageSource(pokemonType)}
 								style={{ borderRadius: 150, flex: 1 }}
@@ -305,9 +319,17 @@ const Details = () => {
 								<DetailsText whiteText>{abilityEffect}</DetailsText>
 							</AbilityContainer>
 						</View>
-						<View style={{ height: 170, gap: 5 }}>
+						<StatsContainer
+							
+						>
 							{stats.map((stat, index) => (
-								<View key={index} style={{ flexDirection: "row", gap: 10 }}>
+								<View
+									key={index}
+									style={{
+										flexDirection: "row",
+										gap: 10,
+									}}
+								>
 									<View style={{ width: "40%" }}>
 										<Text
 											style={{
@@ -339,7 +361,7 @@ const Details = () => {
 									</View>
 								</View>
 							))}
-						</View>
+						</StatsContainer>
 					</DetailsContainer>
 				</CardContainer>
 			</Container>

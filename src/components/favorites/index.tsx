@@ -14,6 +14,7 @@ const Container = styled.SafeAreaView`
 const ContentContainer = styled.View`
 	padding: 15px;
 	border-radius: 15px;
+	padding-bottom: 14%;
 `;
 const TitleContainer = styled.View`
 	height: 100px;
@@ -29,7 +30,7 @@ const ClearButton = styled.TouchableOpacity`
 	elevation: 4;
 `;
 const FavoritesContainer = styled.View`
-	background-color: #d1d1d1;
+	background-color: #db4540;
 	height: 85%;
 	padding-top: 10px;
 	border-radius: 15px;
@@ -39,6 +40,7 @@ const Card = styled.TouchableOpacity`
 	width: 300px;
 	height: 100px;
 	border-radius: 25px;
+	border: 1px solid black;
 	margin-bottom: 20px;
 	align-items: center;
 	flex-direction: row;
@@ -51,7 +53,7 @@ const Text1 = styled.Text`
 	font-family: "Nunito-Regular";
 `;
 const TextCard = styled.Text`
-	color: white;
+	color: #303030;
 	font-size: 25px;
 	font-family: "Nunito-Bold";
 `;
@@ -112,7 +114,7 @@ const Favorites: React.FC<GalleryProps> = () => {
 								}
 							>
 								<ImageBackground
-									source={require("../../../assets/img/backgroundF.jpg")}
+									source={require("../../../assets/img/background7.jpg")}
 									style={{
 										width: "100%",
 										height: "100%",

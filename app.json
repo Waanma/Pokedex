@@ -1,4 +1,10 @@
 {
   "name": "Pokeapi",
-  "displayName": "Pokeapi"
+  "displayName": "Pokeapi",
+  "android": {
+      "image": "./assets/img/pokeballPokedex.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    }
+    
 }

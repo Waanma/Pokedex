@@ -9,7 +9,6 @@ import { Animated } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Container = styled.View`
-	padding: 10px;
 	padding-top: 25px;
 	flex-direction: row;
 	align-items: center;
@@ -45,7 +44,7 @@ const SearchButton = styled.TouchableOpacity`
 	justify-content: center;
 	border-top-right-radius: 25px;
 	border-bottom-right-radius: 25px;
-	color: black;
+	color: #808080;
 	border: 1px solid #9c9c9c;
 `;
 
@@ -93,14 +92,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 				style={{
 					transform: [{ translateX }],
 					overflow: "visible",
-					marginLeft: 10,
 				}}
 			>
 				{searchVisible && (
 					<SearchContainer>
 						<Search
 							onChangeText={setSearchText}
-							placeholder="Search"
+							placeholder="Search pokemon"
 							onFocus={() => setSearchVisible(true)}
 							onBlur={() => setSearchVisible(false)}
 						/>
