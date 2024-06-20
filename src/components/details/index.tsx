@@ -7,6 +7,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Image, ImageBackground, View, Text } from "react-native";
 import { useStore } from "../../store/store";
 
+//Styled-components
 const ScrollContainer = styled.ScrollView``;
 const Container = styled.View`
 	height: 100%;
@@ -177,6 +178,7 @@ type DetailsRouteParams = {
 	}[];
 };
 
+//Component
 const Details = () => {
 	const navigation = useNavigation();
 	const route = useRoute();

@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SearchBar from "../searchBar";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+//Styled-components
 const TitleContainer = styled.View`
 	height: 50px;
 	width: 100%;
@@ -57,7 +58,7 @@ const RefreshButton = styled.TouchableOpacity`
 `;
 const ClearButton = styled.TouchableOpacity`
 	position: absolute;
-	bottom: 20px;
+	bottom: 15%;
 	right: 20px;
 	background-color: #fff;
 	height: 50px;
@@ -103,11 +104,12 @@ export type isPokemon = {
 	}[];
 };
 interface GalleryProps {
-	navigation: StackNavigationProp<RootStackParamList, "Details">;
+	navigation: StackNavigationProp<RootStackParamList, "Home">;
 }
 
-//COMPONENT GALLERY
-const Gallery = ({ navigation }: GalleryProps) => {
+//Component
+const Home = ({ navigation }: GalleryProps) => {
+	//Functions
 	const [searchTerm, setSearchTerm] = useState("");
 
 	const navigateDetails = (pokemon: PokemonDetailsParams) => {
@@ -187,6 +189,7 @@ const Gallery = ({ navigation }: GalleryProps) => {
 		refetch();
 	}, [refetch]);
 
+	//Loading data
 	if (!data || !data.pokemon_v2_pokemon) {
 		return (
 			<Loading>
@@ -202,7 +205,7 @@ const Gallery = ({ navigation }: GalleryProps) => {
 
 	const filteredPokemon = searchTerm
 		? data.pokemon_v2_pokemon.filter((pokemon: isPokemon) =>
-				pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+			pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
 		  )
 		: data.pokemon_v2_pokemon;
 
@@ -255,4 +258,4 @@ const Gallery = ({ navigation }: GalleryProps) => {
 	);
 };
 
-export default Gallery;
+export default Home;

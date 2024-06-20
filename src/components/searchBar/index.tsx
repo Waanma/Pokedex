@@ -8,6 +8,7 @@ import {
 import { Animated } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+//Styled-components
 const Container = styled.View`
 	padding-top: 25px;
 	flex-direction: row;
@@ -52,6 +53,7 @@ interface SearchBarProps {
 	onSearch: (term: string) => void;
 }
 
+//Component
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 	const [searchVisible, setSearchVisible] = useState(false);
 	const [searchText, setSearchText] = useState("");

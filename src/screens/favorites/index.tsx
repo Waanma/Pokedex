@@ -11,7 +11,7 @@ const FavoritesScreen: React.FC = () => {
 
 	return (
 		<ScreenContainer>
-			<Favorites favorites={favorites} onPressPokeball={() => {}} />
+			<Favorites favorites={favorites} />
 		</ScreenContainer>
 	);
 };

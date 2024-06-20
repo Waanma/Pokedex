@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import PokemonDetails from "../../components/details";
+import Details from "../../components/details";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +14,7 @@ const DetailsNavigator = () => {
 		>
 			<Stack.Screen
 				name="Details"
-				component={PokemonDetails}
+				component={Details}
 				options={{ headerTintColor: "#24A8BC" }}
 			/>
 		</Stack.Navigator>

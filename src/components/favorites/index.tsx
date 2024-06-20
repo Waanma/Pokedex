@@ -6,10 +6,11 @@ import { PokemonDetailsParams, RootStackParamList } from "../../types/types";
 import { useStore } from "../../store/store";
 import Alert from "../alert";
 
+//Styled-components
 const Container = styled.SafeAreaView`
 	width: 100%;
 	height: 100%;
-	background-color: #35d4db;
+	background-color: #db4540;
 `;
 const ContentContainer = styled.View`
 	padding: 15px;
@@ -30,7 +31,7 @@ const ClearButton = styled.TouchableOpacity`
 	elevation: 4;
 `;
 const FavoritesContainer = styled.View`
-	background-color: #db4540;
+	background-color: #35d4db;
 	height: 85%;
 	padding-top: 10px;
 	border-radius: 15px;
@@ -61,7 +62,7 @@ const TextCard = styled.Text`
 type GalleryProps = {
 	favorites: PokemonDetailsParams[];
 };
-
+//Component
 const Favorites: React.FC<GalleryProps> = () => {
 	const favorites = useStore((state) => state.favorites);
 	const [showAlert, setShowAlert] = useState(false);
