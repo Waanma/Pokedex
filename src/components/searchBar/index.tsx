@@ -7,12 +7,14 @@ import {
 } from "react-native-gesture-handler";
 import { Animated } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import useOrientation from "../../utils/useOrientarion";
 
 //Styled-components
-const Container = styled.View`
+const Container = styled.View<{ isPortrait: boolean }>`
 	padding-top: 25px;
 	flex-direction: row;
 	align-items: center;
+	padding-bottom: ${({ isPortrait }) => (isPortrait ? "0px" : "10px")};
 `;
 
 const SvgTouchContainer = styled.TouchableOpacity``;
@@ -59,6 +61,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 	const [searchText, setSearchText] = useState("");
 	const translateX = useRef(new Animated.Value(0)).current;
 	const initialX = useRef(0);
+	const { isPortrait } = useOrientation();
 
 	const handleGestureEvent = ({ nativeEvent }: PanGestureHandlerGestureEvent) => {
 		const { state, translationX } = nativeEvent;
@@ -89,7 +92,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 		onSearch(searchText);
 	};
 	return (
-		<Container>
+		<Container isPortrait={isPortrait}>
 			<Animated.View
 				style={{
 					transform: [{ translateX }],

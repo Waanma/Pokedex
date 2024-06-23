@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { useCallback, useState } from "react";
-import { FlatList, Image, ImageBackground, View } from "react-native";
+import { Dimensions, FlatList, Image, ImageBackground, View } from "react-native";
 import styled from "styled-components/native";
 import { RootStackParamList, PokemonDetailsParams } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -9,6 +9,9 @@ import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SearchBar from "../searchBar";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import useOrientation from "../../utils/useOrientarion";
+
+const { width } = Dimensions.get("window");
 
 //Styled-components
 const TitleContainer = styled.View`
@@ -20,18 +23,20 @@ const Title = styled.Text`
 	font-size: 38px;
 	color: white;
 `;
-const Container = styled.View`
-	justify-content: center;
+const Container = styled.View<{ isPortrait: boolean }>`
 	padding-bottom: 20%;
 	height: 100%;
+	align-items: center;
+	width: ${({ isPortrait }) => (isPortrait ? "100%" : width + 230 + "px")};
 `;
-const Item = styled.TouchableOpacity<{ sprites?: string }>`
+const Item = styled.TouchableOpacity<{ sprites?: string; isPortrait: boolean }>`
 	display: grid;
 	align-items: center;
 	justify-content: space-around;
 	border: 1px solid black;
 	border-radius: 10px;
-	width: 48%;
+	width: ${({ isPortrait }) => (isPortrait ? "48%" : "20%")};
+	margin: ${({ isPortrait }) => (isPortrait ? "1%" : "2.5%")};
 	margin: 1%;
 	elevation: 5;
 	z-index: 15;
@@ -111,6 +116,7 @@ interface GalleryProps {
 const Home = ({ navigation }: GalleryProps) => {
 	//Functions
 	const [searchTerm, setSearchTerm] = useState("");
+	const { isPortrait } = useOrientation();
 
 	const navigateDetails = (pokemon: PokemonDetailsParams) => {
 		navigation.navigate("Details", {
@@ -205,24 +211,31 @@ const Home = ({ navigation }: GalleryProps) => {
 
 	const filteredPokemon = searchTerm
 		? data.pokemon_v2_pokemon.filter((pokemon: isPokemon) =>
-			pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+				pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
 		  )
 		: data.pokemon_v2_pokemon;
 
 	return (
 		<GestureHandlerRootView style={{ height: "87%" }}>
 			<SearchBar onSearch={setSearchTerm} />
-			<TitleContainer>
-				<Title>PokedeX</Title>
-			</TitleContainer>
-			<Container>
+			{isPortrait ? (
+				<TitleContainer>
+					<Title>PokedeX</Title>
+				</TitleContainer>
+			) : (
+				<></>
+			)}
+			<Container isPortrait={isPortrait}>
 				<FlatList
 					data={filteredPokemon}
+					key={isPortrait ? "portrait" : "landScape"}
 					keyExtractor={(pokemon: isPokemon) => pokemon.id.toString()}
 					showsVerticalScrollIndicator={false}
 					initialNumToRender={15}
+					contentContainerStyle={{ paddingBottom: 25, gap: 15 }}
+					numColumns={isPortrait ? 2 : 3}
 					renderItem={({ item }: { item: isPokemon }) => (
-						<Item onPress={() => handlePress(item)}>
+						<Item onPress={() => handlePress(item)} isPortrait={isPortrait}>
 							<ImageBackground
 								source={require("../../../assets/img/background7.jpg")}
 								resizeMode="cover"
@@ -245,8 +258,6 @@ const Home = ({ navigation }: GalleryProps) => {
 							</ImageBackground>
 						</Item>
 					)}
-					numColumns={2}
-					contentContainerStyle={{ paddingBottom: 25, gap: 15 }}
 				/>
 				{searchTerm.length > 0 && (
 					<ClearButton onPress={handleClear}>

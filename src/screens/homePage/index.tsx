@@ -5,6 +5,7 @@ import Home from "../../components/homePage";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
+import useOrientation from "../../utils/useOrientarion";
 
 //Types
 type NavigationProp = StackNavigationProp<RootStackParamList, "Home">;
@@ -17,23 +18,28 @@ const Container = styled.View`
 const GalleryContainer = styled.View`
 	margin-horizontal: 2%;
 	border-radius: 35px;
-	padding-top: 11%;
 `;
 //Component
 const HomePage = () => {
 	const navigation = useNavigation<NavigationProp>();
+	const { isPortrait } = useOrientation();
+
 	return (
 		<Container>
 			<ImageBackground
 				source={require("../../../assets/img/background01.jpeg")}
 				style={{
-					position: "absolute",
+					position:"absolute",
 					width: "100%",
 					height: "100%",
 				}}
 			/>
 			<StatusBar translucent backgroundColor="transparent" />
-			<GalleryContainer>
+			<GalleryContainer
+				style={{
+					paddingTop: isPortrait ? "11%" : "0%",
+				}}
+			>
 				<Home navigation={navigation} />
 			</GalleryContainer>
 		</Container>
