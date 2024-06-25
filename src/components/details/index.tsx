@@ -1,10 +1,10 @@
 /* eslint-disable indent */
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import styled from "styled-components/native";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Image, ImageBackground, View, Text } from "react-native";
+import { Image, ImageBackground, View, Text, Animated } from "react-native";
 import { useStore } from "../../store/store";
 
 //Styled-components
@@ -146,7 +146,9 @@ const DetailsText = styled.Text<{
 }>`
 	font-family: "Nunito-Bold";
 	font-size: 15px;
-	${(props) => props.type && "color: #ffff; font-size: 20px; font-weight: bold; text-shadow-color: rgba(0, 0, 0, 1); text-shadow-offset: 0.5px 0.5px; text-shadow-radius: 4px;"}
+	${(props) =>
+		props.type &&
+		"color: #ffff; font-size: 20px; font-weight: bold; text-shadow-color: rgba(0, 0, 0, 1); text-shadow-offset: 0.5px 0.5px; text-shadow-radius: 4px;"}
 	${(props) => props.ability && "color: #000000; font-size: 18px;"}
 	${(props) => props.abilityName && "color: #35d4db; font-size: 22px; font-weight: bold"}
 	${(props) => props.whiteText && "color: #ebebeb; font-size: 16px; padding-bottom: 15px;"}
@@ -154,7 +156,7 @@ const DetailsText = styled.Text<{
 const StatsContainer = styled.View`
 	gap: 10px;
 	elevation: 5;
-	background-color: #EDF2FA;
+	background-color: #edf2fa;
 	padding: 12px;
 	border-radius: 10px;
 `;
@@ -244,7 +246,26 @@ const Details = () => {
 				})),
 			});
 		}
+
+		animatePokeball();
 	}, [addToFavorites, removeFromFavorites, id, pokemonName, isFavorite]);
+
+	const pokeballScale = useRef(new Animated.Value(1)).current;
+
+	const animatePokeball = () => {
+		Animated.sequence([
+			Animated.timing(pokeballScale, {
+				toValue: 1.3,
+				duration: 150,
+				useNativeDriver: true,
+			}),
+			Animated.timing(pokeballScale, {
+				toValue: 1,
+				duration: 150,
+				useNativeDriver: true,
+			}),
+		]).start();
+	};
 
 	const getImageSource = (type: string) => {
 		switch (type) {
@@ -268,15 +289,17 @@ const Details = () => {
 				<BackContainer>
 					<Icon onPress={goBack} name="backburger" size={45} color="#db3c36" />
 					<Pokeball onPress={handleToggleFavorite}>
-						<Image
-							source={
-								isFavorite
-									? require("../../../assets/img/closePokeball.png")
-									: require("../../../assets/img/openPokeball.png")
-							}
-							style={{ width: 50, height: 50, top: -10 }}
-							resizeMode="contain"
-						/>
+						<Animated.View style={{ transform: [{ scale: pokeballScale }] }}>
+							<Image
+								source={
+									isFavorite
+										? require("../../../assets/img/closePokeball.png")
+										: require("../../../assets/img/openPokeball.png")
+								}
+								style={{ width: 50, height: 50, top: -10 }}
+								resizeMode="contain"
+							/>
+						</Animated.View>
 					</Pokeball>
 				</BackContainer>
 				<CardContainer>
@@ -321,9 +344,7 @@ const Details = () => {
 								<DetailsText whiteText>{abilityEffect}</DetailsText>
 							</AbilityContainer>
 						</View>
-						<StatsContainer
-							
-						>
+						<StatsContainer>
 							{stats.map((stat, index) => (
 								<View
 									key={index}

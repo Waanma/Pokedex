@@ -22,6 +22,7 @@ const Title = styled.Text`
 	font-family: "Nunito-Bold";
 	font-size: 38px;
 	color: white;
+	top: -15px;
 `;
 const Container = styled.View<{ isPortrait: boolean }>`
 	padding-bottom: 20%;
@@ -49,6 +50,10 @@ const Text1 = styled.Text`
 	text-shadow-offset: 1px 1px;
 	text-shadow-radius: 3px;
 `;
+const TextNotFound = styled.Text`
+	font-size: 22px;
+	font-family: "Nunito-Bold";
+`;
 const Loading = styled.View`
 	height: 100%;
 	width: 100%;
@@ -58,12 +63,12 @@ const Loading = styled.View`
 const RefreshButton = styled.TouchableOpacity`
 	background-color: #35d4db;
 	padding: 5px;
-	border-radius: 5px;
+	border-radius: 13px;
 	border: 0.5px solid #db3c36;
 `;
 const ClearButton = styled.TouchableOpacity`
 	position: absolute;
-	bottom: 15%;
+	bottom: 20%;
 	right: 20px;
 	background-color: #fff;
 	height: 50px;
@@ -191,82 +196,94 @@ const Home = ({ navigation }: GalleryProps) => {
 
 	// Query
 	const { data, refetch } = useQuery(QUERY);
-	const refetchData = useCallback(() => {
-		refetch();
-	}, [refetch]);
 
-	//Loading data
-	if (!data || !data.pokemon_v2_pokemon) {
-		return (
-			<Loading>
-				<View style={{ width: 70, height: 70 }}>
-					<ProgressBar color="#35d4db" styleAttr="Large" />
-				</View>
-				<RefreshButton onPress={refetchData}>
-					<Text1>Refresh</Text1>
-				</RefreshButton>
-			</Loading>
-		);
-	}
+	try {
+		const refetchData = useCallback(() => {
+			refetch();
+		}, [refetch]);
 
-	const filteredPokemon = searchTerm
-		? data.pokemon_v2_pokemon.filter((pokemon: isPokemon) =>
+		//Loading data
+		if (!data || !data.pokemon_v2_pokemon) {
+			return (
+				<Loading>
+					<View style={{ width: 70, height: 70 }}>
+						<ProgressBar color="#35d4db" styleAttr="Large" />
+					</View>
+					<RefreshButton onPress={refetchData}>
+						<Text1>Refresh</Text1>
+					</RefreshButton>
+				</Loading>
+			);
+		}
+
+		const filteredPokemon = searchTerm
+			? data.pokemon_v2_pokemon.filter((pokemon: isPokemon) =>
 				pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-		  )
-		: data.pokemon_v2_pokemon;
+			  )
+			: data.pokemon_v2_pokemon;
 
-	return (
-		<GestureHandlerRootView style={{ height: "87%" }}>
-			<SearchBar onSearch={setSearchTerm} />
-			{isPortrait ? (
-				<TitleContainer>
-					<Title>PokedeX</Title>
-				</TitleContainer>
-			) : (
-				<></>
-			)}
-			<Container isPortrait={isPortrait}>
-				<FlatList
-					data={filteredPokemon}
-					key={isPortrait ? "portrait" : "landScape"}
-					keyExtractor={(pokemon: isPokemon) => pokemon.id.toString()}
-					showsVerticalScrollIndicator={false}
-					initialNumToRender={15}
-					contentContainerStyle={{ paddingBottom: 25, gap: 15 }}
-					numColumns={isPortrait ? 2 : 3}
-					renderItem={({ item }: { item: isPokemon }) => (
-						<Item onPress={() => handlePress(item)} isPortrait={isPortrait}>
-							<ImageBackground
-								source={require("../../../assets/img/background7.jpg")}
-								resizeMode="cover"
-								style={{
-									width: "100%",
-									alignItems: "center",
-								}}
-								borderRadius={9}
-							>
-								<Image
-									source={{
-										uri: item.pokemon_v2_pokemonsprites[0].sprites.other.home
-											.front_default,
-									}}
-									style={{ width: 100, height: 100, top: -5 }}
-								/>
-								<View style={{ gap: 10 }}>
-									<Text1>{item.name}</Text1>
-								</View>
-							</ImageBackground>
-						</Item>
-					)}
-				/>
-				{searchTerm.length > 0 && (
-					<ClearButton onPress={handleClear}>
-						<Icon name="close" size={40} color={"black"} />
-					</ClearButton>
+		return (
+			<GestureHandlerRootView style={{ height: "87%" }}>
+				<SearchBar onSearch={setSearchTerm} />
+				{isPortrait ? (
+					<TitleContainer>
+						<Title>PokedeX</Title>
+					</TitleContainer>
+				) : (
+					<></>
 				)}
-			</Container>
-		</GestureHandlerRootView>
-	);
+				<Container isPortrait={isPortrait}>
+					{filteredPokemon == "" && (
+						<View>
+							<TextNotFound>Pokemon Not Found</TextNotFound>
+						</View>
+					)}
+					{searchTerm.length > 0 && (
+						<ClearButton onPress={handleClear}>
+							<Icon name="close" size={40} color={"black"} />
+						</ClearButton>
+					)}
+					<FlatList
+						data={filteredPokemon}
+						key={isPortrait ? "portrait" : "landScape"}
+						keyExtractor={(pokemon: isPokemon) => pokemon.id.toString()}
+						showsVerticalScrollIndicator={false}
+						initialNumToRender={15}
+						contentContainerStyle={{ paddingBottom: 25, gap: 15 }}
+						numColumns={isPortrait ? 2 : 3}
+						renderItem={({ item }: { item: isPokemon }) => (
+							<Item onPress={() => handlePress(item)} isPortrait={isPortrait}>
+								<ImageBackground
+									source={require("../../../assets/img/background7.jpg")}
+									resizeMode="cover"
+									style={{
+										width: "100%",
+										alignItems: "center",
+									}}
+									borderRadius={9}
+								>
+									<Image
+										source={{
+											uri: item.pokemon_v2_pokemonsprites[0].sprites.other
+												.home.front_default,
+										}}
+										style={{ width: 100, height: 100, top: -5 }}
+									/>
+									<View style={{ gap: 10 }}>
+										<Text1>{item.name}</Text1>
+									</View>
+								</ImageBackground>
+							</Item>
+						)}
+					/>
+				</Container>
+			</GestureHandlerRootView>
+		);
+	} catch (e) {
+		<View style={{ alignItems: "center", justifyContent: "center" }}>
+			<Text1>Data not found</Text1>;
+		</View>;
+	}
 };
 
 export default Home;

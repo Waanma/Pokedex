@@ -11,6 +11,7 @@ const BottomTab = createBottomTabNavigator();
 
 const TabsNavigator = () => {
 	const { isPortrait } = useOrientation();
+
 	return (
 		<SafeAreaProvider>
 			<View style={{ flex: 1 }}>
