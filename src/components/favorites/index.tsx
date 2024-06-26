@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { FlatList, Image, ImageBackground, View } from "react-native";
+import { FlatList, Image, ImageBackground, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { PokemonDetailsParams, RootStackParamList } from "../../types/types";
 import { useStore } from "../../store/store";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Alert from "../alert";
 
 //Styled-components
@@ -13,9 +14,9 @@ const Container = styled.SafeAreaView`
 	background-color: #db4540;
 `;
 const ContentContainer = styled.View`
-	padding: 15px;
+	padding-horizontal: 15px;
 	border-radius: 15px;
-	padding-bottom: 14%;
+	padding-bottom: 20%;
 `;
 const TitleContainer = styled.View`
 	height: 100px;
@@ -70,9 +71,17 @@ const Favorites: React.FC<GalleryProps> = () => {
 		setShowAlert(!showAlert);
 	};
 	const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+	const goBack = () => {
+		navigation.goBack();
+	};
 	return (
 		<Container>
 			<ContentContainer>
+				<View style={{ width: "100%", height: "auto", top: 35 }}>
+					<TouchableOpacity onPress={goBack}>
+						<Icon onPress={goBack} name="backburger" size={45} color="black" />
+					</TouchableOpacity>
+				</View>
 				<TitleContainer>
 					<Text1>trapped pokemons</Text1>
 					{favorites.length > 0 && (

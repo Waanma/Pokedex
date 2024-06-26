@@ -1,15 +1,18 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import TabsNavigator from "../tabs";
-import HomePage from "../../screens/HomePage";
+import { enableScreens } from "react-native-screens";
+import { DetailsScreen, HomePage, FavoritesScreen } from "../../screens";
+
+enableScreens();
 
 const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
 	return (
-		<Stack.Navigator initialRouteName="Tabs">
-			<Stack.Screen name="Tabs" component={TabsNavigator} />
+		<Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
 			<Stack.Screen name="Home" component={HomePage} />
+			<Stack.Screen name="Favorites" component={FavoritesScreen} />
+			<Stack.Screen name="Details" component={DetailsScreen} />
 		</Stack.Navigator>
 	);
 };

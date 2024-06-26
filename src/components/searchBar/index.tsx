@@ -11,12 +11,10 @@ import useOrientation from "../../utils/useOrientarion";
 
 //Styled-components
 const Container = styled.View<{ isPortrait: boolean }>`
-	padding-top: 25px;
 	flex-direction: row;
 	align-items: center;
-	padding-bottom: ${({ isPortrait }) => (isPortrait ? "0px" : "10px")};
+	padding-bottom: ${({ isPortrait }) => (isPortrait ? null : "10px")};
 `;
-
 const SvgTouchContainer = styled.TouchableOpacity``;
 const ImageContainer = styled.Image`
 	width: 100px;

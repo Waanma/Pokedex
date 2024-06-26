@@ -1,13 +1,15 @@
 import { useQuery } from "@apollo/client";
 import React, { useCallback, useState } from "react";
-import { Dimensions, FlatList, Image, ImageBackground, View } from "react-native";
+import { Dimensions, FlatList, Image, ImageBackground, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { RootStackParamList, PokemonDetailsParams } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { QUERY } from "../../API/graphQL";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { getImageSource } from "../../utils/getImageSource";
 import SearchBar from "../searchBar";
+import DropdownComponent from "../dropDown";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useOrientation from "../../utils/useOrientarion";
 
@@ -15,18 +17,18 @@ const { width } = Dimensions.get("window");
 
 //Styled-components
 const TitleContainer = styled.View`
-	height: 50px;
 	width: 100%;
 `;
 const Title = styled.Text`
 	font-family: "Nunito-Bold";
 	font-size: 38px;
 	color: white;
-	top: -15px;
 `;
 const Container = styled.View<{ isPortrait: boolean }>`
-	padding-bottom: 20%;
-	height: 100%;
+	padding: 10px;
+	border-radius: 7px;
+	background-color: rgba(34, 34, 34, 0.35);
+	height: 80%;
 	align-items: center;
 	width: ${({ isPortrait }) => (isPortrait ? "100%" : width + 230 + "px")};
 `;
@@ -115,12 +117,14 @@ export type isPokemon = {
 };
 interface GalleryProps {
 	navigation: StackNavigationProp<RootStackParamList, "Home">;
+	type: string;
 }
 
 //Component
 const Home = ({ navigation }: GalleryProps) => {
 	//Functions
 	const [searchTerm, setSearchTerm] = useState("");
+	const [selectedType, setSelectedType] = useState("All");
 	const { isPortrait } = useOrientation();
 
 	const navigateDetails = (pokemon: PokemonDetailsParams) => {
@@ -194,6 +198,10 @@ const Home = ({ navigation }: GalleryProps) => {
 		setSearchTerm("");
 	};
 
+	const navigateToFavorites = () => {
+		navigation.navigate("Favorites");
+	};
+
 	// Query
 	const { data, refetch } = useQuery(QUERY);
 
@@ -216,22 +224,40 @@ const Home = ({ navigation }: GalleryProps) => {
 			);
 		}
 
-		const filteredPokemon = searchTerm
-			? data.pokemon_v2_pokemon.filter((pokemon: isPokemon) =>
-				pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-			  )
-			: data.pokemon_v2_pokemon;
+		const filteredPokemon = data.pokemon_v2_pokemon.filter((pokemon: isPokemon) => {
+			const matchesSearchTerm = searchTerm
+				? pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+				: true;
+			const matchesType =
+				selectedType === "All" ||
+				pokemon.pokemon_v2_pokemontypes.some(
+					(type) => type.pokemon_v2_type.name === selectedType
+				);
+			return matchesSearchTerm && matchesType;
+		});
 
 		return (
-			<GestureHandlerRootView style={{ height: "87%" }}>
-				<SearchBar onSearch={setSearchTerm} />
+			<GestureHandlerRootView style={{ height: "87%", gap: 10 }}>
+				<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+					<SearchBar onSearch={setSearchTerm} />
+					<View
+						style={{
+							paddingTop: 12,
+							paddingRight: 12,
+						}}
+					>
+						<TouchableOpacity onPress={navigateToFavorites}>
+							<Icon name="folder-text" size={35} color={"white"} />
+						</TouchableOpacity>
+					</View>
+				</View>
+
 				{isPortrait ? (
 					<TitleContainer>
 						<Title>PokedeX</Title>
 					</TitleContainer>
-				) : (
-					<></>
-				)}
+				) : null}
+				<DropdownComponent setSelectedType={setSelectedType} />
 				<Container isPortrait={isPortrait}>
 					{filteredPokemon == "" && (
 						<View>
@@ -254,7 +280,9 @@ const Home = ({ navigation }: GalleryProps) => {
 						renderItem={({ item }: { item: isPokemon }) => (
 							<Item onPress={() => handlePress(item)} isPortrait={isPortrait}>
 								<ImageBackground
-									source={require("../../../assets/img/background7.jpg")}
+									source={getImageSource(
+										item.pokemon_v2_pokemontypes[0]?.pokemon_v2_type?.name
+									)}
 									resizeMode="cover"
 									style={{
 										width: "100%",
@@ -262,6 +290,14 @@ const Home = ({ navigation }: GalleryProps) => {
 									}}
 									borderRadius={9}
 								>
+									<View
+										style={{
+											flex: 1,
+											width: "100%",
+											marginTop: 5,
+											alignContent: "flex-end",
+										}}
+									></View>
 									<Image
 										source={{
 											uri: item.pokemon_v2_pokemonsprites[0].sprites.other

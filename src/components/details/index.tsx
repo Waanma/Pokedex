@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Image, ImageBackground, View, Text, Animated } from "react-native";
 import { useStore } from "../../store/store";
+import { getImageSource } from "../../utils/getImageSource";
 
 //Styled-components
 const ScrollContainer = styled.ScrollView``;
@@ -124,6 +125,14 @@ const Stats = styled.View`
 	border-radius: 10px;
 	elevation: 5;
 `;
+const StatsContainer = styled.View`
+	gap: 10px;
+	elevation: 5;
+	background-color: #edf2fa;
+	padding: 12px;
+	border-radius: 10px;
+	margin-horizontal: -10px;
+`;
 const DetailsContainer = styled.View`
 	width: 80%;
 	top: -100px;
@@ -149,16 +158,9 @@ const DetailsText = styled.Text<{
 	${(props) =>
 		props.type &&
 		"color: #ffff; font-size: 20px; font-weight: bold; text-shadow-color: rgba(0, 0, 0, 1); text-shadow-offset: 0.5px 0.5px; text-shadow-radius: 4px;"}
-	${(props) => props.ability && "color: #000000; font-size: 18px;"}
+	${(props) => props.ability && "color: #fff; font-size: 18px;"}
 	${(props) => props.abilityName && "color: #35d4db; font-size: 22px; font-weight: bold"}
 	${(props) => props.whiteText && "color: #ebebeb; font-size: 16px; padding-bottom: 15px;"}
-`;
-const StatsContainer = styled.View`
-	gap: 10px;
-	elevation: 5;
-	background-color: #edf2fa;
-	padding: 12px;
-	border-radius: 10px;
 `;
 
 //types
@@ -255,7 +257,7 @@ const Details = () => {
 	const animatePokeball = () => {
 		Animated.sequence([
 			Animated.timing(pokeballScale, {
-				toValue: 1.3,
+				toValue: 1.2,
 				duration: 150,
 				useNativeDriver: true,
 			}),
@@ -265,23 +267,6 @@ const Details = () => {
 				useNativeDriver: true,
 			}),
 		]).start();
-	};
-
-	const getImageSource = (type: string) => {
-		switch (type) {
-			case "water":
-				return require("../../../assets/img/water.jpg");
-			case "poison":
-			case "ground":
-			case "rock":
-				return require("../../../assets/img/rock.jpg");
-			case "psychic":
-				return require("../../../assets/img/desert.jpg");
-			case "ghost":
-				return require("../../../assets/img/ghost.jpg");
-			default:
-				return require("../../../assets/img/normal.jpg");
-		}
 	};
 	return (
 		<ScrollContainer nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
@@ -353,7 +338,7 @@ const Details = () => {
 										gap: 10,
 									}}
 								>
-									<View style={{ width: "40%" }}>
+									<View style={{ width: "45%" }}>
 										<Text
 											style={{
 												color: "#301030",
@@ -363,7 +348,7 @@ const Details = () => {
 											{stat.pokemon_v2_stat.name}
 										</Text>
 									</View>
-									<View style={{ width: "45%" }}>
+									<View style={{ width: "40%" }}>
 										<ProgressBar
 											styleAttr="Horizontal"
 											indeterminate={false}
