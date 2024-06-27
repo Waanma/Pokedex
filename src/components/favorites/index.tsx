@@ -11,7 +11,7 @@ import Alert from "../alert";
 const Container = styled.SafeAreaView`
 	width: 100%;
 	height: 100%;
-	background-color: #db4540;
+	padding-bottom: 15%;
 `;
 const ContentContainer = styled.View`
 	padding-horizontal: 15px;

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { StatusBar, ImageBackground } from "react-native";
+import { StatusBar } from "react-native";
 import Home from "../../components/homePage";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../types/types";
@@ -12,7 +12,7 @@ type NavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 //Styled-components
 const Container = styled.View`
-	background-color: #35d4db;
+	background-color: #db4540;
 	height: 100%;
 `;
 const GalleryContainer = styled.View`
@@ -26,14 +26,6 @@ const HomePage = () => {
 
 	return (
 		<Container>
-			<ImageBackground
-				source={require("../../../assets/img/background01.jpeg")}
-				style={{
-					position:"absolute",
-					width: "100%",
-					height: "100%",
-				}}
-			/>
 			<StatusBar translucent backgroundColor="transparent" />
 			<GalleryContainer
 				style={{

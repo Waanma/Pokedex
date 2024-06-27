@@ -1,28 +1,29 @@
 import { useQuery } from "@apollo/client";
 import React, { useCallback, useState } from "react";
-import { Dimensions, FlatList, Image, ImageBackground, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { RootStackParamList, PokemonDetailsParams } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { QUERY } from "../../API/graphQL";
 import { ProgressBar } from "@react-native-community/progress-bar-android";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { getImageSource } from "../../utils/getImageSource";
 import SearchBar from "../searchBar";
 import DropdownComponent from "../dropDown";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useOrientation from "../../utils/useOrientarion";
-
-const { width } = Dimensions.get("window");
 
 //Styled-components
 const TitleContainer = styled.View`
 	width: 100%;
 `;
 const Title = styled.Text`
-	font-family: "Nunito-Bold";
+	font-family: "pokemonsolid";
 	font-size: 38px;
-	color: white;
+	color: yellow;
+	text-shadow-color: #000;
+	text-shadow-offset: 3px -2px;
+	text-shadow-radius: 1px;
+	margin-left: 10px;
 `;
 const Container = styled.View<{ isPortrait: boolean }>`
 	padding: 10px;
@@ -30,26 +31,63 @@ const Container = styled.View<{ isPortrait: boolean }>`
 	background-color: rgba(34, 34, 34, 0.35);
 	height: 80%;
 	align-items: center;
-	width: ${({ isPortrait }) => (isPortrait ? "100%" : width + 230 + "px")};
 `;
-const Item = styled.TouchableOpacity<{ sprites?: string; isPortrait: boolean }>`
-	display: grid;
+const Item = styled.TouchableOpacity<{ sprites?: string; isPortrait: boolean; type: string }>`
 	align-items: center;
-	justify-content: space-around;
-	border: 1px solid black;
+	justify-content: center;
+	border: 2px solid #303030;
 	border-radius: 10px;
-	width: ${({ isPortrait }) => (isPortrait ? "48%" : "20%")};
-	margin: ${({ isPortrait }) => (isPortrait ? "1%" : "2.5%")};
+	width: ${({ isPortrait }) => (isPortrait ? "48%" : "23%")};
 	margin: 1%;
 	elevation: 5;
 	z-index: 15;
+	background-color: ${(props) => {
+		switch (props.type.toLowerCase()) {
+			case "fire":
+				return "#FFB997";
+			case "grass":
+				return "#9ED08D";
+			case "water":
+				return "#90C7E3";
+			case "bug":
+				return "#B6D998";
+			case "poison":
+				return "#C08AC0";
+			case "electric":
+				return "#FFFCA8";
+			case "ground":
+				return "#D4A26E";
+			case "fairy":
+				return "#FFD7E7";
+			case "flying":
+				return "#C6B9EE";
+			case "psychic":
+				return "#F6B5CC";
+			case "rock":
+				return "#D9CC97";
+			case "dragon":
+				return "#BAA8F8";
+			case "dark":
+				return "#A7A2A1";
+			case "steel":
+				return "#C4C6DC";
+			case "ice":
+				return "#BFE8E8";
+			case "fighting":
+				return "#D78B83";
+			case "ghost":
+				return "#B5A7CE";
+			default:
+				return "gray";
+		}
+	}};
 `;
 const Text1 = styled.Text`
-	color: #303030;
+	color: #000;
 	font-family: "Nunito-Bold";
 	font-size: 22px;
-	text-shadow-color: white;
-	text-shadow-offset: 1px 1px;
+	text-shadow-color: #fff;
+	text-shadow-offset: 0.5px 0.5px;
 	text-shadow-radius: 3px;
 `;
 const TextNotFound = styled.Text`
@@ -117,7 +155,6 @@ export type isPokemon = {
 };
 interface GalleryProps {
 	navigation: StackNavigationProp<RootStackParamList, "Home">;
-	type: string;
 }
 
 //Component
@@ -276,39 +313,23 @@ const Home = ({ navigation }: GalleryProps) => {
 						showsVerticalScrollIndicator={false}
 						initialNumToRender={15}
 						contentContainerStyle={{ paddingBottom: 25, gap: 15 }}
-						numColumns={isPortrait ? 2 : 3}
+						numColumns={isPortrait ? 2 : 4}
 						renderItem={({ item }: { item: isPokemon }) => (
-							<Item onPress={() => handlePress(item)} isPortrait={isPortrait}>
-								<ImageBackground
-									source={getImageSource(
-										item.pokemon_v2_pokemontypes[0]?.pokemon_v2_type?.name
-									)}
-									resizeMode="cover"
-									style={{
-										width: "100%",
-										alignItems: "center",
+							<Item
+								onPress={() => handlePress(item)}
+								isPortrait={isPortrait}
+								type={item.pokemon_v2_pokemontypes[0]?.pokemon_v2_type?.name}
+							>
+								<Image
+									source={{
+										uri: item.pokemon_v2_pokemonsprites[0].sprites.other.home
+											.front_default,
 									}}
-									borderRadius={9}
-								>
-									<View
-										style={{
-											flex: 1,
-											width: "100%",
-											marginTop: 5,
-											alignContent: "flex-end",
-										}}
-									></View>
-									<Image
-										source={{
-											uri: item.pokemon_v2_pokemonsprites[0].sprites.other
-												.home.front_default,
-										}}
-										style={{ width: 100, height: 100, top: -5 }}
-									/>
-									<View style={{ gap: 10 }}>
-										<Text1>{item.name}</Text1>
-									</View>
-								</ImageBackground>
+									style={{ width: 100, height: 100, top: -5 }}
+								/>
+								<View style={{ gap: 10 }}>
+									<Text1>{item.name}</Text1>
+								</View>
 							</Item>
 						)}
 					/>

@@ -55,7 +55,7 @@ const DropdownComponent = ({ setSelectedType }: { setSelectedType: (type: string
 					setIsFocus(false);
 					setSelectedType(typeValues[item.value]);
 				}}
-				renderLeftIcon={() => <Icon name="folder-heart" size={35} color={"red"} />}
+				renderLeftIcon={() => <Icon name="pokeball" size={35} color={"red"} />}
 			/>
 		</View>
 	);
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontFamily: "QuicksandMedium",
 		color: "black",
+		margin: 5,
 	},
 	selectedTextStyle: {
 		fontSize: 16,

@@ -14,7 +14,6 @@ const Container = styled.View`
 	height: 100%;
 	width: 100%;
 	padding-top: 20px;
-	padding-bottom: 10%;
 	justify-content: center;
 	align-items: center;
 	background-color: #35d4db;
