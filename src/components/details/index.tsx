@@ -28,7 +28,7 @@ const CardContainer = styled.View`
 	width: 90%;
 	height: 85%;
 	align-items: center;
-	background-color: #db4540;
+	background-color: #db3c36;
 	border-radius: 10px;
 	elevation: 1;
 `;
@@ -36,7 +36,7 @@ const PokemonContainer = styled.View`
 	width: 220px;
 	height: 220px;
 	border-radius: 150px;
-	border: 5px solid #db4540;
+	border: 5px solid #db3c36;
 	overflow: hidden;
 	position: relative;
 `;

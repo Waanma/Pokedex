@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { useCallback, useState } from "react";
-import { FlatList, Image, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, View } from "react-native";
 import styled from "styled-components/native";
 import { RootStackParamList, PokemonDetailsParams } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -13,17 +13,22 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useOrientation from "../../utils/useOrientarion";
 
 //Styled-components
+
+const TouchableFolder = styled.TouchableOpacity`
+	background-color: #35d4db;
+	padding: 5px;
+	border-radius: 15px;
+`;
 const TitleContainer = styled.View`
-	width: 100%;
+	padding-left: 15px;
 `;
 const Title = styled.Text`
 	font-family: "pokemonsolid";
-	font-size: 38px;
-	color: yellow;
+	font-size: 50px;
+	color: #35d4db;
 	text-shadow-color: #000;
 	text-shadow-offset: 3px -2px;
 	text-shadow-radius: 1px;
-	margin-left: 10px;
 `;
 const Container = styled.View<{ isPortrait: boolean }>`
 	padding: 10px;
@@ -274,26 +279,27 @@ const Home = ({ navigation }: GalleryProps) => {
 		});
 
 		return (
-			<GestureHandlerRootView style={{ height: "87%", gap: 10 }}>
+			<GestureHandlerRootView style={{ height: "85%", gap: 10 }}>
 				<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-					<SearchBar onSearch={setSearchTerm} />
+					{isPortrait ? (
+						<TitleContainer>
+							<Title>PokedeX</Title>
+						</TitleContainer>
+					) : null}
 					<View
 						style={{
 							paddingTop: 12,
 							paddingRight: 12,
 						}}
 					>
-						<TouchableOpacity onPress={navigateToFavorites}>
-							<Icon name="folder-text" size={35} color={"white"} />
-						</TouchableOpacity>
+						<TouchableFolder onPress={navigateToFavorites}>
+							<Icon name="folder-text" size={35} color={"black"} />
+						</TouchableFolder>
 					</View>
 				</View>
 
-				{isPortrait ? (
-					<TitleContainer>
-						<Title>PokedeX</Title>
-					</TitleContainer>
-				) : null}
+				<SearchBar onSearch={setSearchTerm} />
+
 				<DropdownComponent setSelectedType={setSelectedType} />
 				<Container isPortrait={isPortrait}>
 					{filteredPokemon == "" && (
@@ -325,7 +331,11 @@ const Home = ({ navigation }: GalleryProps) => {
 										uri: item.pokemon_v2_pokemonsprites[0].sprites.other.home
 											.front_default,
 									}}
-									style={{ width: 100, height: 100, top: -5 }}
+									style={{
+										width: 100,
+										height: 100,
+										top: -5,
+									}}
 								/>
 								<View style={{ gap: 10 }}>
 									<Text1>{item.name}</Text1>

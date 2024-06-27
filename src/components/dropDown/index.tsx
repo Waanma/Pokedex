@@ -55,7 +55,7 @@ const DropdownComponent = ({ setSelectedType }: { setSelectedType: (type: string
 					setIsFocus(false);
 					setSelectedType(typeValues[item.value]);
 				}}
-				renderLeftIcon={() => <Icon name="pokeball" size={35} color={"red"} />}
+				renderLeftIcon={() => <Icon name="pokeball" size={35} color={"#35d4db"} />}
 			/>
 		</View>
 	);

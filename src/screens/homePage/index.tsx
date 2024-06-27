@@ -12,7 +12,7 @@ type NavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 //Styled-components
 const Container = styled.View`
-	background-color: #db4540;
+	background-color: #db3c36;
 	height: 100%;
 `;
 const GalleryContainer = styled.View`
