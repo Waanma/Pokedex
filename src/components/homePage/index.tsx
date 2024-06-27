@@ -14,18 +14,15 @@ import useOrientation from "../../utils/useOrientarion";
 
 //Styled-components
 
-const TouchableFolder = styled.TouchableOpacity`
-	background-color: #35d4db;
-	padding: 5px;
-	border-radius: 15px;
-`;
+const TouchableFolder = styled.TouchableOpacity``;
 const TitleContainer = styled.View`
 	padding-left: 15px;
 `;
 const Title = styled.Text`
+	width: 200px;
 	font-family: "pokemonsolid";
 	font-size: 50px;
-	color: #35d4db;
+	color: #f0f0f0;
 	text-shadow-color: #000;
 	text-shadow-offset: 3px -2px;
 	text-shadow-radius: 1px;
@@ -293,7 +290,17 @@ const Home = ({ navigation }: GalleryProps) => {
 						}}
 					>
 						<TouchableFolder onPress={navigateToFavorites}>
-							<Icon name="folder-text" size={35} color={"black"} />
+							<Icon
+								name="folder-text"
+								size={35}
+								color={"black"}
+								style={{
+									elevation: 5,
+									padding: 5,
+									borderRadius: 12,
+									backgroundColor: "#35d4db",
+								}}
+							/>
 						</TouchableFolder>
 					</View>
 				</View>
