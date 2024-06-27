@@ -11,38 +11,33 @@ import Alert from "../alert";
 const Container = styled.SafeAreaView`
 	width: 100%;
 	height: 100%;
-	padding-bottom: 15%;
 `;
 const ContentContainer = styled.View`
 	padding-horizontal: 15px;
 	border-radius: 15px;
 	padding-bottom: 20%;
 `;
-const TitleContainer = styled.View`
-	height: 100px;
-	width: 100%;
-	align-items: center;
-	justify-content: center;
-`;
 const ClearButton = styled.TouchableOpacity`
-	background-color: #14cc89;
+	width: 50px;
+	height: 50px;
+	background-color: #db3c36;
 	padding: 7px;
-	border-radius: 20px;
+	border-radius: 60px;
 	border: 0.4px solid black;
 	elevation: 4;
 `;
 const FavoritesContainer = styled.View`
-	background-color: #35d4db;
+	background-color: #db3c36;
 	height: 85%;
 	padding-top: 10px;
 	border-radius: 15px;
-	border: 0.7px solid gray;
+	border: 3px solid rgba(48, 48, 48, 0.5);
 `;
 const Card = styled.TouchableOpacity<{ pokemonType: string }>`
 	width: 300px;
 	height: 100px;
 	border-radius: 25px;
-	border: 1px solid black;
+	border: 3px solid rgba(48, 48, 48, 0.3);
 	margin-bottom: 20px;
 	align-items: center;
 	flex-direction: row;
@@ -92,7 +87,7 @@ const Card = styled.TouchableOpacity<{ pokemonType: string }>`
 const Text1 = styled.Text`
 	color: #303030;
 	font-size: 25px;
-	font-family: "Nunito-Regular";
+	font-family: "Nunito-Bold";
 `;
 const TextCard = styled.Text`
 	color: #303030;
@@ -117,20 +112,29 @@ const Favorites: React.FC<GalleryProps> = () => {
 	return (
 		<Container>
 			<ContentContainer>
-				<View style={{ width: "100%", height: "auto", top: 35 }}>
+				<View
+					style={{
+						width: "100%",
+						height: "auto",
+						top: 35,
+						flexDirection: "row",
+						justifyContent: "space-between",
+						paddingBottom: "12%",
+					}}
+				>
 					<TouchableOpacity onPress={goBack}>
-						<Icon onPress={goBack} name="backburger" size={45} color="black" />
+						<Icon onPress={goBack} name="backburger" size={45} color="#db3c36" />
 					</TouchableOpacity>
-				</View>
-				<TitleContainer>
-					<Text1>trapped pokemons</Text1>
 					{favorites.length > 0 && (
 						<ClearButton onPress={alert}>
-							<Text1>Free all pokemons</Text1>
+							<Icon name="close" size={35} color={"black"} />
 						</ClearButton>
 					)}
-					<Alert showAlert={showAlert} hideAlert={alert} />
-				</TitleContainer>
+				</View>
+
+				<Alert showAlert={showAlert} hideAlert={alert} />
+
+				<Text1 style={{ padding: 5 }}>trapped pokemons:</Text1>
 				<FavoritesContainer>
 					<FlatList
 						contentContainerStyle={{ alignItems: "center" }}
@@ -164,7 +168,16 @@ const Favorites: React.FC<GalleryProps> = () => {
 									})
 								}
 							>
-								<View style={{ paddingBottom: 25, zIndex: 15 }}>
+								<View
+									style={{
+										zIndex: 15,
+										backgroundColor: "rgba(48, 48, 48, 0.3)",
+										borderRadius: 120,
+										width: 150,
+										height: 155,
+										right: 5,
+									}}
+								>
 									<Image
 										source={{
 											uri: item.sprites.front_default,
