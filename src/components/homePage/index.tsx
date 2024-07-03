@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { useCallback, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FlatList, Image, View } from "react-native";
 import styled from "styled-components/native";
 import { RootStackParamList, PokemonDetailsParams } from "../../types/types";
@@ -34,7 +34,11 @@ const Container = styled.View<{ isPortrait: boolean }>`
 	height: 85%;
 	align-items: center;
 `;
-const Item = styled.TouchableOpacity<{ sprites?: string; isPortrait: boolean; type: string }>`
+const Item = React.memo(styled.TouchableOpacity<{
+	sprites?: string;
+	isPortrait: boolean;
+	type: string;
+}>`
 	align-items: center;
 	justify-content: center;
 	border: 2px solid #303030;
@@ -83,7 +87,7 @@ const Item = styled.TouchableOpacity<{ sprites?: string; isPortrait: boolean; ty
 				return "gray";
 		}
 	}};
-`;
+`);
 const Text1 = styled.Text`
 	color: #000;
 	font-family: "Nunito-Bold";
@@ -95,18 +99,6 @@ const Text1 = styled.Text`
 const TextNotFound = styled.Text`
 	font-size: 22px;
 	font-family: "Nunito-Bold";
-`;
-const Loading = styled.View`
-	height: 100%;
-	width: 100%;
-	align-items: center;
-	justify-content: center;
-`;
-const RefreshButton = styled.TouchableOpacity`
-	background-color: #35d4db;
-	padding: 5px;
-	border-radius: 13px;
-	border: 0.5px solid #db3c36;
 `;
 const ClearButton = styled.TouchableOpacity`
 	position: absolute;
@@ -241,126 +233,131 @@ const Home = ({ navigation }: GalleryProps) => {
 		navigation.navigate("Favorites");
 	};
 
+	const [limit] = useState(20);
+	const [offset, setOffset] = useState(0);
+	const [allPokemon, setAllPokemon] = useState<isPokemon[]>([]);
+
 	// Query
-	const { data, refetch } = useQuery(QUERY);
+	const { data, loading, fetchMore } = useQuery(QUERY, {
+		variables: { limit, offset },
+	});
 
-	try {
-		const refetchData = useCallback(() => {
-			refetch();
-		}, [refetch]);
+	useEffect(() => {
+		if (data && data.pokemon_v2_pokemon) {
+			setAllPokemon((prev) => [...prev, ...data.pokemon_v2_pokemon]);
+		}
+	}, [data]);
 
-		//Loading data
-		if (!data || !data.pokemon_v2_pokemon) {
-			return (
-				<Loading>
+	const loadMore = () => {
+		setOffset((prevOffset) => prevOffset + limit);
+		fetchMore({
+			variables: {
+				offset: offset + limit,
+			},
+		});
+	};
+
+	const filteredPokemon = allPokemon.filter((pokemon: isPokemon) => {
+		const matchesSearchTerm = searchTerm
+			? pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+			: true;
+		const matchesType =
+			selectedType === "All" ||
+			pokemon.pokemon_v2_pokemontypes.some(
+				(type) => type.pokemon_v2_type.name === selectedType
+			);
+		return matchesSearchTerm && matchesType;
+	});
+
+	return (
+		<GestureHandlerRootView style={{ height: "85%", gap: 10 }}>
+			<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+				{isPortrait ? (
 					<TitleContainer>
 						<Title>PokedeX</Title>
 					</TitleContainer>
-					<View style={{ width: 70, height: 70 }}>
-						<ProgressBar color="#35d4db" styleAttr="Large" />
+				) : null}
+				<View
+					style={{
+						paddingTop: 12,
+						paddingRight: 12,
+					}}
+				>
+					<TouchableFolder onPress={navigateToFavorites}>
+						<Icon
+							name="folder-text"
+							size={35}
+							color={"black"}
+							style={{
+								elevation: 5,
+								padding: 5,
+								borderRadius: 12,
+								backgroundColor: "#35d4db",
+							}}
+						/>
+					</TouchableFolder>
+				</View>
+			</View>
+
+			<SearchBar onSearch={setSearchTerm} />
+
+			<DropdownComponent setSelectedType={setSelectedType} />
+			<Container isPortrait={isPortrait}>
+				{filteredPokemon.length === 0 && (
+					<View>
+						<TextNotFound>Pokemon Not Found</TextNotFound>
 					</View>
-					<RefreshButton onPress={refetchData}>
-						<Text1>Refresh</Text1>
-					</RefreshButton>
-				</Loading>
-			);
-		}
-
-		const filteredPokemon = data.pokemon_v2_pokemon.filter((pokemon: isPokemon) => {
-			const matchesSearchTerm = searchTerm
-				? pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-				: true;
-			const matchesType =
-				selectedType === "All" ||
-				pokemon.pokemon_v2_pokemontypes.some(
-					(type) => type.pokemon_v2_type.name === selectedType
-				);
-			return matchesSearchTerm && matchesType;
-		});
-
-		return (
-			<GestureHandlerRootView style={{ height: "85%", gap: 10 }}>
-				<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-					{isPortrait ? (
-						<TitleContainer>
-							<Title>PokedeX</Title>
-						</TitleContainer>
-					) : null}
-					<View
-						style={{
-							paddingTop: 12,
-							paddingRight: 12,
-						}}
-					>
-						<TouchableFolder onPress={navigateToFavorites}>
-							<Icon
-								name="folder-text"
-								size={35}
-								color={"black"}
+				)}
+				{searchTerm.length > 0 && (
+					<ClearButton onPress={handleClear}>
+						<Icon name="close" size={40} color={"black"} />
+					</ClearButton>
+				)}
+				<FlatList
+					data={filteredPokemon}
+					key={isPortrait ? "portrait" : "landScape"}
+					keyExtractor={(pokemon: isPokemon, index) =>
+						pokemon.id.toString() + index.toString()
+					}
+					showsVerticalScrollIndicator={false}
+					initialNumToRender={15}
+					contentContainerStyle={{ paddingBottom: 25, gap: 15 }}
+					numColumns={isPortrait ? 2 : 4}
+					onEndReached={loadMore}
+					onEndReachedThreshold={0.5}
+					maxToRenderPerBatch={15}
+					windowSize={15}
+					removeClippedSubviews={true}
+					ListFooterComponent={
+						loading ? <ProgressBar color="#35d4db" styleAttr="Small" /> : null
+					}
+					renderItem={({ item }: { item: isPokemon }) => (
+						<Item
+							onPress={() => handlePress(item)}
+							isPortrait={isPortrait}
+							type={item.pokemon_v2_pokemontypes[0]?.pokemon_v2_type?.name}
+						>
+							<Image
+								source={{
+									uri: item.pokemon_v2_pokemonsprites[0]?.sprites?.other?.home
+										?.front_default,
+								}}
+								defaultSource={require("../../../assets/img/iconPokeball.png")}
 								style={{
-									elevation: 5,
-									padding: 5,
-									borderRadius: 12,
-									backgroundColor: "#35d4db",
+									width: 100,
+									height: 100,
+									top: -5,
 								}}
 							/>
-						</TouchableFolder>
-					</View>
-				</View>
-
-				<SearchBar onSearch={setSearchTerm} />
-
-				<DropdownComponent setSelectedType={setSelectedType} />
-				<Container isPortrait={isPortrait}>
-					{filteredPokemon == "" && (
-						<View>
-							<TextNotFound>Pokemon Not Found</TextNotFound>
-						</View>
+							<View style={{ gap: 10 }}>
+								<Text1>{item.name}</Text1>
+							</View>
+						</Item>
 					)}
-					{searchTerm.length > 0 && (
-						<ClearButton onPress={handleClear}>
-							<Icon name="close" size={40} color={"black"} />
-						</ClearButton>
-					)}
-					<FlatList
-						data={filteredPokemon}
-						key={isPortrait ? "portrait" : "landScape"}
-						keyExtractor={(pokemon: isPokemon) => pokemon.id.toString()}
-						showsVerticalScrollIndicator={false}
-						initialNumToRender={15}
-						contentContainerStyle={{ paddingBottom: 25, gap: 15 }}
-						numColumns={isPortrait ? 2 : 4}
-						renderItem={({ item }: { item: isPokemon }) => (
-							<Item
-								onPress={() => handlePress(item)}
-								isPortrait={isPortrait}
-								type={item.pokemon_v2_pokemontypes[0]?.pokemon_v2_type?.name}
-							>
-								<Image
-									source={{
-										uri: item.pokemon_v2_pokemonsprites[0].sprites.other.home
-											.front_default,
-									}}
-									style={{
-										width: 100,
-										height: 100,
-										top: -5,
-									}}
-								/>
-								<View style={{ gap: 10 }}>
-									<Text1>{item.name}</Text1>
-								</View>
-							</Item>
-						)}
-					/>
-				</Container>
-			</GestureHandlerRootView>
-		);
-	} catch (e) {
-		<View style={{ alignItems: "center", justifyContent: "center" }}>
-			<Text1>Data not found</Text1>;
-		</View>;
-	}
+				/>
+			</Container>
+		</GestureHandlerRootView>
+	);
 };
 
 export default Home;

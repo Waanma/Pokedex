@@ -123,12 +123,7 @@ const Favorites: React.FC<GalleryProps> = () => {
 					}}
 				>
 					<TouchableOpacity onPress={goBack}>
-						<Icon
-							onPress={goBack}
-							name="backburger"
-							size={45}
-							color="#303030"
-						/>
+						<Icon onPress={goBack} name="backburger" size={45} color="#303030" />
 					</TouchableOpacity>
 					{favorites.length > 0 && (
 						<ClearButton onPress={alert}>
@@ -181,13 +176,15 @@ const Favorites: React.FC<GalleryProps> = () => {
 										width: 150,
 										height: 155,
 										right: 5,
+										alignItems: "center",
+										justifyContent: "center",
 									}}
 								>
 									<Image
 										source={{
 											uri: item.sprites.front_default,
 										}}
-										style={{ width: 140, height: 140 }}
+										style={{ width: 105, height: 105 }}
 									/>
 								</View>
 								<TextCard>{item.name}</TextCard>

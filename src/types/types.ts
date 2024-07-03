@@ -37,7 +37,7 @@ export type RootStackParamList = {
 };
 
 export type PokemonDetailsParams = {
-	base_experience: number;
+    base_experience: number;
     id: number;
     name: string;
     height: number;

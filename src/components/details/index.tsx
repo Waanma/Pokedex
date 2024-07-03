@@ -16,7 +16,7 @@ const Container = styled.View`
 	padding-top: 20px;
 	justify-content: center;
 	align-items: center;
-	background-color: #35d4db;
+	background-color: #8fa3d6;
 `;
 const BackContainer = styled.View`
 	width: 85%;
