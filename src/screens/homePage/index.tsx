@@ -6,18 +6,21 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import useOrientation from "../../utils/useOrientarion";
+import LinearGradient from "react-native-linear-gradient";
 
 //Types
 type NavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 //Styled-components
 const Container = styled.View`
-	background-color: #db3c36;
 	height: 100%;
 `;
 const GalleryContainer = styled.View`
 	margin-horizontal: 2%;
 	border-radius: 35px;
+`;
+const StyledLinearGradient = styled(LinearGradient)`
+	flex: 1;
 `;
 //Component
 const HomePage = () => {
@@ -26,14 +29,20 @@ const HomePage = () => {
 
 	return (
 		<Container>
-			<StatusBar translucent backgroundColor="transparent" />
-			<GalleryContainer
-				style={{
-					paddingTop: isPortrait ? "11%" : "0%",
-				}}
+			<StyledLinearGradient
+				start={{ x: 0, y: 1 }}
+				end={{ x: 1, y: 0 }}
+				colors={["#8fa3d6", "#4c669f"]}
 			>
-				<Home navigation={navigation} />
-			</GalleryContainer>
+				<StatusBar translucent backgroundColor="transparent" />
+				<GalleryContainer
+					style={{
+						paddingTop: isPortrait ? "11%" : "0%",
+					}}
+				>
+					<Home navigation={navigation} />
+				</GalleryContainer>
+			</StyledLinearGradient>
 		</Container>
 	);
 };

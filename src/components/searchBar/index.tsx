@@ -14,6 +14,7 @@ const Container = styled.View<{ isPortrait: boolean }>`
 	flex-direction: row;
 	align-items: center;
 	padding-bottom: ${({ isPortrait }) => (isPortrait ? null : "10px")};
+	gap: 8px;
 `;
 const SvgTouchContainer = styled.TouchableOpacity``;
 const ImageContainer = styled.Image`

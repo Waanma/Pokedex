@@ -27,7 +27,7 @@ const ClearButton = styled.TouchableOpacity`
 	elevation: 4;
 `;
 const FavoritesContainer = styled.View`
-	background-color: #db3c36;
+	background-color: #ccd2de;
 	height: 85%;
 	padding-top: 10px;
 	border-radius: 15px;
@@ -123,7 +123,12 @@ const Favorites: React.FC<GalleryProps> = () => {
 					}}
 				>
 					<TouchableOpacity onPress={goBack}>
-						<Icon onPress={goBack} name="backburger" size={45} color="#db3c36" />
+						<Icon
+							onPress={goBack}
+							name="backburger"
+							size={45}
+							color="#303030"
+						/>
 					</TouchableOpacity>
 					{favorites.length > 0 && (
 						<ClearButton onPress={alert}>

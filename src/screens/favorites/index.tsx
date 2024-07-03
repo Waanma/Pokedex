@@ -4,7 +4,7 @@ import Favorites from "../../components/favorites";
 import { useStore } from "../../store/store";
 
 const ScreenContainer = styled.SafeAreaView`
-	background-color: #35d4db;
+	background-color: #8fa3d6;
 `;
 
 const FavoritesScreen: React.FC = () => {

@@ -31,7 +31,7 @@ const Container = styled.View<{ isPortrait: boolean }>`
 	padding: 10px;
 	border-radius: 7px;
 	background-color: rgba(34, 34, 34, 0.35);
-	height: 80%;
+	height: 85%;
 	align-items: center;
 `;
 const Item = styled.TouchableOpacity<{ sprites?: string; isPortrait: boolean; type: string }>`
@@ -253,6 +253,9 @@ const Home = ({ navigation }: GalleryProps) => {
 		if (!data || !data.pokemon_v2_pokemon) {
 			return (
 				<Loading>
+					<TitleContainer>
+						<Title>PokedeX</Title>
+					</TitleContainer>
 					<View style={{ width: 70, height: 70 }}>
 						<ProgressBar color="#35d4db" styleAttr="Large" />
 					</View>
